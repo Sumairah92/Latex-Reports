@@ -1,0 +1,64 @@
+\begin{thebibliography}{10}
+
+\bibitem{thesis}
+F.~Ongaro, ``Enhancing quality of service in software defined networks,''
+  Master's thesis, University Of Bologna, 2014.
+
+\bibitem{bigswitch}
+R.~Wallner and R.~Cannistra, ``An sdn approach: quality of service using big
+  switch’s floodlight open-source controller,'' {\em Proceedings of the
+  Asia-Pacific Advanced Network}, vol.~35, pp.~14--19, 2013.
+
+\bibitem{scheduler}
+A.~Ishimori, F.~Farias, E.~Cerqueira, and A.~Abel{\'e}m, ``Control of multiple
+  packet schedulers for improving qos on openflow/sdn networking,'' in {\em
+  Proceedings of the 2013 Second European Workshop on Software Defined
+  Networks}, EWSDN '13, (Washington, DC, USA), pp.~81--86, IEEE Computer
+  Society, 2013.
+
+\bibitem{multipath}
+E.~Chemeritskiy and R.~Smelansky, ``On qos management in sdn by multipath
+  routing,'' in {\em Science and Technology Conference (Modern Networking
+  Technologies) (MoNeTeC), 2014 International}, pp.~1--6, Oct 2014.
+
+\bibitem{qctrl}
+K.~Govindarajan, K.~C. Meng, H.~Ong, W.~M. Tat, S.~Sivanand, and L.~S. Leong,
+  ``Realizing the quality of service (qos) in software-defined networking (sdn)
+  based cloud infrastructure,'' in {\em Information and Communication
+  Technology (ICoICT), 2014 2nd International Conference on}, pp.~505--510, May
+  2014.
+
+\bibitem{openqos}
+H.~Egilmez, S.~Dane, K.~Bagci, and A.~Tekalp, ``Openqos: An openflow controller
+  design for multimedia delivery with end-to-end quality of service over
+  software-defined networks,'' in {\em Signal Information Processing
+  Association Annual Summit and Conference (APSIPA ASC), 2012 Asia-Pacific},
+  pp.~1--8, Dec 2012.
+
+\bibitem{monsamp}
+D.~Raumer, L.~Schwaighofer, and G.~Carle, ``Monsamp: A distributed sdn
+  application for qos monitoring,'' in {\em Computer Science and Information
+  Systems (FedCSIS), 2014 Federated Conference on}, pp.~961--968, IEEE, 2014.
+
+\bibitem{video}
+H.~Egilmez, S.~Civanlar, and A.~Tekalp, ``An optimization framework for
+  qos-enabled adaptive video streaming over openflow networks,'' {\em
+  Multimedia, IEEE Transactions on}, vol.~15, pp.~710--715, April 2013.
+
+\bibitem{lemon}
+COIN-OR, ``Lemon graph library.'' https://lemon.cs.elte.hu/trac/lemon.
+
+\bibitem{convergence}
+W.~Kim, P.~Sharma, J.~Lee, S.~Banerjee, J.~Tourrilhes, S.-J. Lee, and
+  P.~Yalagandula, ``Automated and scalable qos control for network
+  convergence,'' in {\em Proceedings of the 2010 Internet Network Management
+  Conference on Research on Enterprise Networking}, INM/WREN'10, (Berkeley, CA,
+  USA), pp.~1--1, USENIX Association, 2010.
+
+\bibitem{dataplane}
+H.~Mekky, F.~Hao, S.~Mukherjee, Z.-L. Zhang, and T.~Lakshman,
+  ``Application-aware data plane processing in sdn,'' in {\em Proceedings of
+  the Third Workshop on Hot Topics in Software Defined Networking}, HotSDN '14,
+  (New York, NY, USA), pp.~13--18, ACM, 2014.
+
+\end{thebibliography}
