@@ -1,3 +1,46 @@
-This is BibTeX, Version 0.99dThe top-level auxiliary file: Smartgrid.aux
+This is BibTeX, Version 0.99d (TeX Live 2015)
+Capacity: max_strings=35307, hash_size=35307, hash_prime=30011
+The top-level auxiliary file: Smartgrid.aux
 The style file: ieeetr.bst
 Database file #1: Smartgrid.bib
+You've used 7 entries,
+            1876 wiz_defined-function locations,
+            525 strings with 5116 characters,
+and the built_in function-call counts, 2000 in all, are:
+= -- 187
+> -- 82
+< -- 0
++ -- 30
+- -- 23
+* -- 151
+:= -- 291
+add.period$ -- 7
+call.type$ -- 7
+change.case$ -- 7
+chr.to.int$ -- 0
+cite$ -- 7
+duplicate$ -- 107
+empty$ -- 194
+format.name$ -- 23
+if$ -- 486
+int.to.chr$ -- 0
+int.to.str$ -- 7
+missing$ -- 6
+newline$ -- 24
+num.names$ -- 7
+pop$ -- 25
+preamble$ -- 1
+purify$ -- 0
+quote$ -- 0
+skip$ -- 71
+stack$ -- 0
+substring$ -- 116
+swap$ -- 38
+text.length$ -- 0
+text.prefix$ -- 0
+top$ -- 0
+type$ -- 0
+warning$ -- 0
+while$ -- 22
+width$ -- 8
+write$ -- 73

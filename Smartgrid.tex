@@ -10,12 +10,14 @@
 \usepackage[T1]{fontenc}
 \usepackage{fourier}
 \usepackage[section]{placeins}
+\usepackage{float}
 
 \usepackage[english]{babel}															% English language/hyphenation
 \usepackage[protrusion=true,expansion=true]{microtype}				% Better typography
 \usepackage{amsmath,amsfonts,amsthm}										% Math packages
 \usepackage[pdftex]{graphicx}														% Enable pdflatex
 \usepackage{url}
+
 
 
 %%% Custom sectioning (sectsty package)
@@ -38,7 +40,6 @@
 \numberwithin{equation}{section}		% Equationnumbering: section.eq#
 \numberwithin{figure}{section}			% Figurenumbering: section.fig#
 \numberwithin{table}{section}				% Tablenumbering: section.tab#
-
 
 %%% Maketitle metadata
 \newcommand{\horrule}[1]{\rule{\linewidth}{#1}} 	% Horizontal rule
@@ -75,53 +76,87 @@
 %\newpage
 \tableofcontents
 \newpage
+
 \section{Introduction}
-This project focused on research about how OpenFlow and Software Defined Networks can be used to provide Quality of Service. The main goal of Software defined networks is to help create a smarter network then we have today. The concept of splitting the control plane and the data plane and increasing programmability of the network by taking the intelligence to a central controller allows us to make our networking entities more application aware. The advantages of a smarter network are better utilization of network resources, adaptability, lower cost and better services. 
+This project focuses on research and proof of concept about how OpenFlow and Software Defined Networks can be used to provide Quality of Service. The main goal of Software defined networks is to help create a smarter network then we have today. The concept of splitting the control plane and the data plane and increasing programmability of the network by taking the intelligence to a central controller allows us to make our networking entities more application aware. The advantages of a smarter network are better utilization of network resources, adaptability, lower cost and better services.
 \\
 \\
-The decoupling of the control plane and data plane allows a high degree of control over flows that pass through the switches via intelligent controller applications. The increasing advent of real time applications also bring with them the need of demanding Quality of Service guarantees and the network protocols need to have the capability of meeting these requirements \cite{thesis}. We need to utilize OpenFlow protocol in SDN for providing dynamic QoS guarantees for different classes of flows with different service requirements by making dynamic routing decisions or efficient priority queuing. 
-\section{Techniques for implementing QoS in sdn}
-This report summarizes the techniques that were researched in this independent study.
- \subsection{An sdn approach: quality of service using big switch's floodlight open-source controller}
- Wallner et al. use OpenvSwitch and Floodlight OpenFlow controller to define and manage quality of service in software defined networks via rate limiting/traffic shaping and DSCP diffserv (Differentiated Services Code point). This is achieved by bandwidth control among the OVS ports for rate limiting and using the 8 Type of Service bits in existing IP header for implementing differentiating class of service. They use standard OpenFlow protocol specifications like "enqueue" for queuing traffic or "network ToS" to rewrite the ToS field in the IP header. The SDN controller runs modules for flow matching and classification, insertion and deletion of rules in flow tables, network topology updates and handling QoS policies. The QoS policies are maintained using two python applications "QoS Manager" and "QoS Path" in the control plane that use the northbound interface and assign policies like queuing policy or differentiating ToS policy to different flows. The queues inside the switch are configured by an administrator but OpenFlow version 3.0 introduces "OF-Config" that will make this process easier \cite{bigswitch}.
-
-\subsection{control of multiple packet schedulers for improving QoS on openflow/sdn networking}
-This paper improves upon the approach for packet scheduling in Wallner et al. \cite{bigswitch}. Ishimori et al. present QoSFlow using multiple packet schedulers of Linux kernel e.g., Hierarchical Token Bucket, Randonly Early detection and Stochastic Fairness queuing to overcome packet scheduling issues. They argue that only bandwidth guaratees and FIFO scheduling is not enough to provide QoS guarantees in SDN. Their module adds OpenFlow data path extensions with queues located in the kernel space and use Netlink and sockets to connects kernel space to the userspace. This enables the mapping of QoS messages from OpenFlow to Netlink messages (Netlink messages are accepted by Linux kernel for network resource management from userspace). Using a strong traffic control system of Linux, traffic shaping is done through hierarchical token bucket algorithm, packets in queues are sent out the transmission channel via round robin algorithm and congestion avoidance by avoiding saturation of queues is achieved by Randonly Early detection \cite{scheduler}.
-
-\subsection{On QoS management in SDN by multipath routing}
-Chemeritskiy et al. talk about quantitative quality of service evaluation of a network that is giving the application its due set of connection parameters according to the QoS requirements of that application. The parameters can be throughput,
-End to end delay, Jitter (deviation from average end-to-end delay) and number of packets lost or damaged in the channel. All these requirements need network resources that cannot be allocated beforehand to meet QoS efficiently. They propose MPRSDN (Multi Path Routing Software Defined Network) which is a best effort approach because they do not reserve resources beforehand so that they can be efficiently utilized. It does not require any special hardware and just needs the hosts to install the software agent for MPR. They want to avoid controller interference because it violates end to end principle. So implement something with only the help of application at end hosts. They split and balance a flow among a set of alternative paths using MP agent which splits tcp session into multiple virtual sessions at the end host by starting internal sockets. Those sockets set up individual connections in the network which still doesn't ensure usage of different paths but we can change that using SDN. The controller can intercept the first packet of each new connection and find out the application it belongs to by inspecting the payload and make sure the flows with the same connection take different paths. All the flows are multiplexed together via a multiflow agent at the destination host. In this way, each subflow establishes a connection with unique pair of L4 addresses and each treated as an independent ordinary flow where we can also have priority in the sub flows using higher TOS/DSCP. A speciating routing module in the controller keeps track of the subflows, QoS policies and dynamic calculation of paths which serve the best QoS to the flows \cite{multipath}.
-
-\subsection{Realizing the quality of service (QoS) in software-defined networking (sdn) based cloud infrastructure}
-Govindarajan et al. present a special QoS Controller called Q-Ctrl by exploiting the fact that OpenFlow lets administrators decide the path which the flows will take through the network. Q-Ctrl uses a virtual overlay via OVS over the physical network controlled via an SDN controller. Since SDN controller itself does not provide mechanisms for QoS management and policy maintenance, they provide a reference architecture, a QoS lifecycle control system and Q-Ctrl system implementation details. Q-Ctrl can be implemented in direct, controller or simulated environment depending on the requirements. It uses "Topology manager" and "Topology information" for maintaining network topology information and assign network links to different applications based on that information. The QoS lifecycle describes how a particular QoS flow is added into a queue, how specific QoS rules are added in flow table, modified and removed. The architecture was implemented in a cloud data center environment to effectively manage and allocate virtual machines' bandwidth in the data center \cite{qctrl}.
-
-\subsection{OpenQoS: an openflow controller design for multimedia delivery with end-to-end quality of service over software-defined networks}
-Traditional QoS architectures like Diffserv (soft QoS guarantees) and IntServ (hard QoS guarantees) do not have a complete picture of overall network resources and are based on a hop by hop routing architecture. OpenQoS is a controller design for multimedia apps specifically where timely delivery is preferred over reliability usually without affecting other types of traffic. The incoming flows are split in to data flows and multimedia flows so that multimedia QoS flows can be dynamically routed while the rest of the data flows remain on the shortest optimal path for them. Their implementation consists of three interfaces. A standard Controller-switch interface, A Controller-controller interface in case of multiple controllers in large network management and a  Controller-service interface for service providers to specify policies for their flows. The controller itself has functional modules of topology management, route and flow management, route calculation, call admission and traffic policing \cite{openqos}.
+The decoupling of the control plane and data plane allows a high degree of control over flows that pass through the switches via intelligent controller applications. The increasing advent of real time applications also bring with them the need of demanding Quality of Service guarantees and the network protocols need to have the capability of meeting these requirements \cite{thesis}. The quality of service evaluation of a network is to make certain that the application receives its due set of connection parameters according to the QoS requirements of that application. The parameters can be throughput, End to end delay, Jitter (deviation from average end-to-end delay) and number of packets lost or damaged in the channel \cite{multipath}. 
 \\
 \\
-Multimedia traffic is differentiated by Traffic class header field in MPLS, TOS (Type of Service) field of IPv4 header, Traffic class field in IPv6 header, source IP address of a known multimedia server and TCP port numbers.They propose to use MPLS headers and for making routing decisions, collect current global network state information like delay, bandwidth and rate of packet loss). They define a NP-Complete problem which minimizes the cost function subject to a delay variation of a max D and propose to use Lagrangian Relaxation Based Aggregated Cost (LARAC) algorithm for route calculation when a Packet\_in event arrives. The routes are recalculated if topology manager indicates changes or QoS policies are changes. The route management module in controller collects up to date network information from switches by sending Feature\_Request and Feature\_Reply of OpenFlow protocol. Then links are assigned states of "congested" or "uncongested" and decisions made based on cost fucntion. Route managers keep track of flows already in switches and delete if a route is now congested or insert if a previous congested route now uncongested \cite{openqos}.
-\subsection{Monsamp: a distributed sdn application for QoS monitoring}
-MonSamp is a controller application specially dedicated to monitoring the QoS of flows in software defined networks. They rely on traffic sampling for the purpose of QoS implementation for flows by taking out a subset of traffic for each and migrate those flows to some commodity server for a later QoS monitoring. They do not actually implement any QoS but provide an efficient approach for traffic monitoring in order to get more information about link and network parameters that may or may not affect QoS \cite{monsamp}. 
-\subsection{An optimization framework for QoS-enabled adaptive video streaming over openflow networks}
-Egilmez et al. use dynamic QoS optimization for multimedia traffic i.e., no resource reservation/priority queuing and constrained shortest path calculation using two level QoS flows i-e use a video format like MPEG-4 which encodes videos in a base layer and enhancement layers. Then the base layer is served highest QoS and the enhancement layers are best service causing a trade off decision between performance and cost. The controller identifies the level 1 QoS (base layer), level 2 QoS (enhancement layers) and normal traffic flows and updates the switches using a "service mgmnt" module and "route mgmnt" + "route calculation" modules. Similar to \cite{openqos}, the "route calculation" uses Constrianed Shortest Path problem (Lagrangian Relaxation Based Aggregated cost algorithm (LARAC)) to minimize cost function subject to delay variation. The estimation of bandwidth and packet loss are done intermittently using the switches and passed to "route mgmnt" \cite{video}. The estimations are done using the following ways
-\begin{itemize}
-	\item Packet loss measures estimated using per-flow counters in the OF switches
-	\item Link bandwidth by experimentation/manually
-	\item Delay is calculated by average observed delay using time stamping methods
-	\item Delay variation (jitter) is the first derivative of the above delay
-\end{itemize}
-The above characteristics can be scaled by a factor according to the application QoS requirements \cite{video}. They used LEMON* for test network implementation. LARAC algorithm already implemented in LEMON*. 
+We need to utilize OpenFlow protocol in SDN for providing dynamic QoS guarantees for different classes of flows with different service requirements by making dynamic routing decisions or efficient priority queuing. 
+
+\section{Related work for implementing QoS in sdn}
+This report summarizes the techniques that were researched for literature review on the project.
+
+\subsection{Rate limiting and traffic shaping}
+The rate limiting or traffic shaping technique is achieved by bandwidth control among the OVS ports for rate limiting. Standard OpenFlow protocol specifications like "enqueue" can be used for queuing traffic based on inspection of flows by the SDN controller in order to assign different queuing QoS policies for different flows. The queues inside OVS itself are configured by an administrator of OpenFlow versions less than 3.0 while versions 3.0 and above introduce "OF-Config" that will make this process much easier \cite{bigswitch}. 
+\\
+\\
+Since only bandwidth guaratees and FIFO scheduling is not enough to provide QoS guarantees in SDN, using multiple packet schedulers of Linux kernel e.g., Hierarchical Token Bucket, Randonly Early detection and Stochastic Fairness queuing can be utilized to overcome packet scheduling issues. The strong traffic control system of Linux can be used to provide traffic shaping, queuing and congestion avoidance. This approach would require data path extensions for OpenFlow for kernel space queues \cite{scheduler}
+\\
+\\
+Some QoS extensions to OpenFlow have been developed in \cite{convergence} that have the capability of taking in high level QoS requirements of applications and automatically modify the QoS parameters on network devices in the form of rate limiters and dynamic priority assignment. This controller removes the need of manually configuring QoS requirements for each device in the network and centrally controls these configurations. 
+\subsection{Differentiated Services Code Point (DSCP)}
+This technique is established by using the 8 Type of Service bits in existing IP header for implementing differentiating class of service. Standard OpenFlow protocol specifications allow rewriting of the Type of Service field in the IP header using "network ToS". This is achieved by the SDN controller after flow matching and classification according to different ToS polices for different flows \cite{bigswitch}.
+\subsection{Multipath routing}
+The idea of multipath routing is to split and balance a flow among a set of alternative paths using a Multipath agent which splits tcp session into multiple virtual sessions at the end host by starting internal sockets. The controller can intercept the first packet of each new connection and find out the application it belongs to by inspecting the payload and make sure the flows with the same connection take different paths. All the flows are multiplexed together via a multiflow agent at the destination host. A speciating routing module in the controller keeps track of the subflows, QoS policies and dynamic calculation of paths which serve the best QoS to the flows \cite{multipath}.
+\subsection{Dynamic routing of specific flows}
+This approach is designed for special QoS flows like multimedia flows where timely delivery is preferred over reliability usually without affecting other types of traffic. The QoS flows can be dynamically routed on different paths while the rest of the data flows remain on the shortest optimal path for them. The traffic can be differentiated by Traffic class header field in MPLS, TOS (Type of Service) field of IPv4 header, Traffic class field in IPv6 header, source IP address of a known multimedia server and TCP port numbers. Collection of current global network state information like delay, bandwidth and rate of packet loss is also required for dynamic routing \cite{openqos}.
+\\
+\\
+Another approach for dynamic routing is by using two level QoS flows for multimedia like MPEG-4 which encodes videos in a base layer and enhancement layers. The controller identifies the level 1 QoS (base layer), level 2 QoS (enhancement layers) and normal traffic flows and updates the switches with calculated dynamic routes for level 1 QoS and level 2 QoS flows after estimating bandwidth and delays on the links \cite{video}.
+\\
+\\
+Another technique in \cite{thesis} tries to find an optimal path between two end points with the minimum cost (that does not increase the capacity of any link) after ruling out the links that break specified QoS constraints.(i-e delay and packet loss do not increase a threshold).The architecture dynamically updates the network parameters to become aware of the status of the network and calculate the best route according to the QoS specified policies. The model is based on "multi-commodity flow constrained shortest path problem (MCFSP)" .
+
+\section{Motivation for the project}
+The project aims for setting up an experiment for implementing dynamic Quality of Service in software defined networks using GENI portal as the platform. The project serves to be a proof of concept on how the behavior of individual network flows can be changed from the default shortest forwarding path through Northbound API applications running on top of the SDN controller.
+\section{Project description}
+\subsection{Experiment Setup}
+The experiment is set up in GENI portal using Xen virtual machines as hosts and Open vSwitch nodes as virtual switches between them. The switches are configured with default shortest path routing rules for each of the hosts using an SDN controller. The SDN controller used is Floodlight open source controller which exposes a REST API for the northbound applications to use. The northbound QoS application for the experiment is developed in Python. It uses python packages like Networkx and untangle in order to construct the topology using the information provided by the controller REST API and RSpec document provided by the GENI portal. 
+\subsection{The network topology and the controller}
+The topology constructed in GENI portal is shown in Figure \ref{Fig 4.1}. *May replace with a 4 switch topology figure later*. The topology is not linear and has multiple paths between a pair of hosts in order to have alternate paths for routing flows based on bandwidth. The nodes labeled as switches run Openvswitch on them configured to use an OVS bridge to connect to the hosts and other OVS nodes.
+\\
+Each of the OpenFlow switches (OVS) have a Datapath id (DPID) associated with them which is used by the SDN controller to identify and control the switches. Using the web interface of the Floodlight controller, we can see the switches connected to the controller and the various information statistics related to them in Figure \ref{Fig 4.2}.
+\begin{figure}[H]
 \begin{center}
-*\textit{"LEMON stands for Library for Efficient Modeling and Optimization in Networks. It is a C++ template library providing efficient implementations of common data structures and algorithms with focus on combinatoric optimization tasks connected mainly with graphs and networks." \cite{lemon}}
+\includegraphics[scale=0.55]{topology.png}   
 \end{center}
-\subsection{Automated and scalable QoS control for network convergence}
-Kim et al. develop some QoS extensions to OpenFlow that have the capability of taking in high level QoS requirements of applications and automatically modify the QoS parameters on network devices in the form of rate limiters and dynamic priority assignment. This controller removes the need of manually configuring QoS requirements for each device in the network and centrally controls these configurations. The controller creates slices in the network and each slice is assigned to traffic of different applications according to their performance requirements. They specify as special QoS API; an extension to OpenFlow which is responsible for mapping flows to rate limites and priority queues for enforcing bandwidth and delay guarantees. The flows are differentiated for QoS services in reactive mode by the controller by inspecting the first packet for each flow and adjusting the configurations in the queues in switches for that flow. An adaptive aggregation module lessens the load of the controller by reducing the packet\_ins to the controller and aggregating flows into groups \cite{convergence}.
-\subsection{Enhancing quality of service in software defined networks}
-This thesis report implements a Qos management and orchestration architecture that integrates with SDN infrastructure. The author formulates the problem of guaranteeing good QoS in terms of packet loss and delay taking into account constraints on network i-e maximum packet loss/delay acceptable by the service and the bandwidth available on links. The model is based on "multi-commodity flow constrained shortest path problem (MCFSP)" which tries to find an optimal path
-between two end points with the minimum cost (that does not increase the capacity of any link) after ruling out the links that break specified QoS constraints.(i-e delay and packet loss do not increase a threshold).The architecture dynamically updates the network parameters to become aware of the status of the network and calculate the best route according to the QoS specified policies. The controller modules are the "Network Topology Mapper" which maintains information about network topology and links, a "Static Path Inserter" which inserts the flow rules into the flow tables, the "Network Status Collector" derives network parameters about bandwidth, latency and packet loss, a "Dynamic Path Inserter" installs the rule found by the "path finder" which implements the "MCFSP" model for finding the best path as decribed above using the information from the "Network Status Collector". They implemented the controller modules in JAVA and uses AMPL and CPLEX for solving the mathematical dynamic path finding \cite{thesis}.
+ \caption{GENI topology}
+ \label{Fig 4.1}
+\end{figure}
+\begin{figure}[H]
+\begin{center}
+\includegraphics[scale=0.45]{floodlight.png}   
+\end{center}
+ \caption{Floodlight dashboard}
+ \label{Fig 4.2}
+\end{figure}
+We can also see the OpenFlow rules that a switch is configured with in Figure \ref{Fig 4.3}. Right now, the rules shown are default shortest path rules that the floodlight controller pushed into the switches using the static flow pusher REST API.
+\begin{figure}[H]
+\begin{center}
+\includegraphics[scale=0.35]{rules.png}   
+\end{center}
+ \caption{Rule table in OpenFlow switch}
+ \label{Fig 4.3}
+\end{figure}
+\subsection{Flow of the application}
+The control flow of the application starts from constructing the network graph, polling the OpenFlow switches using the floodlight REST API to find active flows and then uses the statistics collector module of floodlight to query link statistics. Based on the statistics received, the application chooses a different but better path for active flows based on link bandwidth.
+\\
+\\
+The design decisions taken are the following:
+\begin{itemize}
+\item The topology is constructed using Python Networkx library undirected graph. The information for the nodes and the edges is received from the GENI RSpec document as well as the Floodlight controller REST API calls.
+\item The bandwidth statistics from the statistics collector module of floodlight queries the links every 10 seconds.
+\item The different simple paths are only on an end-to-end basis for a pair of hosts. A simple path means that no node is repeated between a path between two hosts.
+\item A switch can only decide to change the path for a flow if the sender's IP is on the same subnet as the switch's interface.
+\item The active flows are decided by polling the switches every 10 seconds and comparing the last packets hit count with the new polled information.
+\item ***How the application selects the path based on bandwidth and list of simple paths between the two hosts***
+\item The QoS rule written by the controller in the switches for a particular flow has an idle timeout of 60 seconds.
 
-\subsection{Application-aware data plane processing in sdn}
-The extended architecture of SDN in Mekky et al. implemented as a prototype on Open vSwitch reduces switch-controller delay by keeping most of the processing in data plane thereby eliminating unnecessary detouring of traffic or the need to track flow state between different applications. Examples of applications that can be implemented in software can be QoS applications, NAT, Firewall, TCP splicing etc. The central idea of the implementation is that logic is not kept restricted to the controller only. Instead, all the OpenFlow enabled switches maintain local application specific processing logic and have stateful application processing capabilities and also utilize L4-L7 header information. OVS was chosen as the platform because it allows extension of the data path and introduction of application processing capabilities in it and also provides opportunities to make a modular design and interface. The userspace flow table pipeline is modified by replacing the last table with a special "app table". The table miss rules which specified the action "Trap to the controller" are replaced with "go to app table" action and hence intercepted instead of being sent to the controller. The app table matches packets to actions like a standard unmodified OpenFlow table but the actions are special corresponding to application processing actions. These actions direct packets to application instances running inside the OVS. The SDN controller can also write and delete rules from the app table like a standard flow table. The support for these special actions comes from "vendor actions" supported by OpenFlow protocol. In case a table miss happens in the app table as well, a packet\_in event is sent to the controller. This allows control applications to run inside the OVS datapath increasing performance significantly \cite{dataplane}.
+\end{itemize}
+
 
 \bibliographystyle{ieeetr}% Select the citation style e.g. ieeetr
 \bibliography{Smartgrid}% write the directory to the .bib file

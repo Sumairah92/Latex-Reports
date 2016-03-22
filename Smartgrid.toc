@@ -1,14 +1,12 @@
 \select@language {english}
-\contentsline {section}{\numberline {1}Abstract}{1}
-\contentsline {section}{\numberline {2}Introduction}{3}
-\contentsline {section}{\numberline {3}Techniques for implementing QoS in sdn}{3}
-\contentsline {subsection}{\numberline {3.1}An sdn approach: quality of service using big switch's floodlight open-source controller}{3}
-\contentsline {subsection}{\numberline {3.2}control of multiple packet schedulers for improving QoS on openflow/sdn networking}{3}
-\contentsline {subsection}{\numberline {3.3}On QoS management in SDN by multipath routing}{4}
-\contentsline {subsection}{\numberline {3.4}Realizing the quality of service (QoS) in software-defined networking (sdn) based cloud infrastructure}{4}
-\contentsline {subsection}{\numberline {3.5}OpenQoS: an openflow controller design for multimedia delivery with end-to-end quality of service over software-defined networks}{5}
-\contentsline {subsection}{\numberline {3.6}Monsamp: a distributed sdn application for QoS monitoring}{5}
-\contentsline {subsection}{\numberline {3.7}An optimization framework for QoS-enabled adaptive video streaming over openflow networks}{6}
-\contentsline {subsection}{\numberline {3.8}Automated and scalable QoS control for network convergence}{6}
-\contentsline {subsection}{\numberline {3.9}Enhancing quality of service in software defined networks}{7}
-\contentsline {subsection}{\numberline {3.10}Application-aware data plane processing in sdn}{7}
+\contentsline {section}{\numberline {1}Introduction}{2}
+\contentsline {section}{\numberline {2}Related work for implementing QoS in sdn}{2}
+\contentsline {subsection}{\numberline {2.1}Rate limiting and traffic shaping}{2}
+\contentsline {subsection}{\numberline {2.2}Differentiated Services Code Point (DSCP)}{3}
+\contentsline {subsection}{\numberline {2.3}Multipath routing}{3}
+\contentsline {subsection}{\numberline {2.4}Dynamic routing of specific flows}{3}
+\contentsline {section}{\numberline {3}Motivation for the project}{4}
+\contentsline {section}{\numberline {4}Project description}{4}
+\contentsline {subsection}{\numberline {4.1}Experiment Setup}{4}
+\contentsline {subsection}{\numberline {4.2}The network topology and the controller}{4}
+\contentsline {subsection}{\numberline {4.3}Flow of the application}{6}
