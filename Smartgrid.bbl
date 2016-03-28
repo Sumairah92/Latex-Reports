@@ -40,4 +40,8 @@ H.~Egilmez, S.~Civanlar, and A.~Tekalp, ``An optimization framework for
   qos-enabled adaptive video streaming over openflow networks,'' {\em
   Multimedia, IEEE Transactions on}, vol.~15, pp.~710--715, April 2013.
 
+\bibitem{stats}
+R.~Izard, ``How to collect switch statistics (and compute bandwidth).''
+  https://floodlight.atlassian.net/wiki/pages/viewpage.action?pageId=21856267.
+
 \end{thebibliography}

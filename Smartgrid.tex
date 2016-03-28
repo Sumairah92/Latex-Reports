@@ -116,7 +116,7 @@ The project aims for setting up an experiment for implementing dynamic Quality o
 \subsection{Experiment Setup}
 The experiment is set up in GENI portal using Xen virtual machines as hosts and Open vSwitch nodes as virtual switches between them. The switches are configured with default shortest path routing rules for each of the hosts using an SDN controller. The SDN controller used is Floodlight open source controller which exposes a REST API for the northbound applications to use. The northbound QoS application for the experiment is developed in Python. It uses python packages like Networkx and untangle in order to construct the topology using the information provided by the controller REST API and RSpec document provided by the GENI portal. 
 \subsection{The network topology and the controller}
-The topology constructed in GENI portal is shown in Figure \ref{Fig 4.1}. *May replace with a 4 switch topology figure later*. The topology is not linear and has multiple paths between a pair of hosts in order to have alternate paths for routing flows based on bandwidth. The nodes labeled as switches run Openvswitch on them configured to use an OVS bridge to connect to the hosts and other OVS nodes.
+The topology constructed in GENI portal is shown in Figure \ref{Fig 4.1}. The topology is not linear and has multiple paths between a pair of hosts in order to have alternate paths for routing flows based on bandwidth. The nodes labeled as switches run Openvswitch on them configured to use an OVS bridge to connect to the hosts and other OVS nodes.
 \\
 Each of the OpenFlow switches (OVS) have a Datapath id (DPID) associated with them which is used by the SDN controller to identify and control the switches. Using the web interface of the Floodlight controller, we can see the switches connected to the controller and the various information statistics related to them in Figure \ref{Fig 4.2}.
 \begin{figure}[H]
@@ -158,23 +158,37 @@ The design decisions taken are the following:
 \end{itemize}
 
 \subsubsection{Constructing the topology}
-The application reads in the RSpec XML document from GENI portal and parses information about the names and interfaces of the nodes. The Python library used for parsing is "untangle" which converts XML to python objects. The node data items consist of the IP address, MAC address and port number for each of the interfaces connected to that node. The application then queries the controller using REST API commands to get respective OpenFlow Datapath ids (DPIDs) for the switches in the topology.
-\\
-\\
-For constructing the network graph, Python library "Networkx" is used which provides data structures for constructing network graphs. The library creates a Network object to which nodes and edges can be added. The nodes have the data items for interfaces as described above as well as the DPID matched to the nodes using the controller information. 
+The application reads in the RSpec XML document from GENI portal and parses information about the names and interfaces of the nodes. The Python library used for parsing is "untangle" which converts XML to python objects. The node data items consist of the IP address, MAC address and port number for each of the interfaces connected to that node. The application then queries the controller using REST API commands to get respective OpenFlow Datapath ids (DPIDs) for the switches in the topology. Following command is used to get the DPID list from the controller:
+\textit{
+\begin{center}
+"curl -s http://<controllerIp>/wm/core/controller/switches/json" 
+\end{center}
+}
+To match a DPID received from the controller to the node name in GENI, the following REST API command is used:
+\textit{
+\begin{center}
+"curl -s http://<controllerIp>/wm/core/switch/all/desc/json"
+\end{center}
+}
+This command returns features of all the switches and the field 'datapathDescription' gives information to match the DPID to the node name from GENI.Similarly, the RSpec does not give information about the switch ports for the interfaces and the information about port numbers has to be queried from the controller using the following command:
+\textit{
+\begin{center}
+"curl -s http://<controllerIp>/wm/core/switch/all/features/json"
+\end{center}
+}
+For constructing the network graph after parsing the RSpec and querying the controller for the desired information, Python library "Networkx" is used which provides data structures for constructing network graphs. The library creates a Network object to which nodes and edges can be added. The nodes have the data items for interfaces as described above as well as the DPID and port numbers matched to the nodes using the controller information. 
 \\
 \\
 Since the RSpec document or the controller do not provide information about the neighbors of the nodes or which interface is connected to which neighbor, the inter-host links are identified by matching the respective IP addresses in order to construct the edges between the nodes for the graph.
 
 \subsubsection{Identifying hosts connected to the switches}
-As mentioned in the design decisions, A switch can only decide to change the path for a flow if the sender's IP is on the same subnet as the switch's interface. To implement this, a structure is constructed which specifies which hosts are on the switch subnet and which are the interfaces that connect to another switch instead of a host. It also specifies the possible source and destination pairs of a switch's traffic after polling all the shortest path flows in the OpenFlow table of that switch. This structure also maintains the flow statistics for each pair of source and destination hosts in the form of the last packet count. This information is later used to determine active flows in the network.
+As mentioned in the design decisions, A switch can only decide to change the path for a flow if the sender's IP is on the same subnet as the switch's interface. To implement this, a structure 'switchHostsFlows' is constructed which specifies which hosts are on the switch subnet and which are the interfaces that connect to another switch instead of a host. It also specifies the possible source and destination pairs of a switch's traffic after polling all the shortest path flows in the OpenFlow table of that switch. This structure also maintains the flow statistics for each pair of source and destination hosts in the form of the last packet count. This information is later used to determine active flows in the network.
 \\
 \\
 The hosts connected to the switch are identified by comparing the network address of interfaces of the hosts to the /24 network prefix of the interfaces of the particular switch. This structure only references the nodes which play the role of "hosts" on the network and not the ones which play the role of "switches".
 
 \subsubsection{Enabling statistics collection}
 In order to take advantage of the Floodlight controller statistics module REST API, it needs to be enabled in all the OpenFlow switches in the network. The command used to enable the statistics collection in the application is:
-\\
 \textit{
 \begin{center}
 "curl -X POST -d ' ' http://< controllerIp>/wm/statistics/config/enable/json"
@@ -186,6 +200,16 @@ After statistics are enabled in the switches, the application can query the cont
 "curl http://<controllerIp>/wm/statistics/bandwidth/<switchDPID>/<port>/json"
 \end{center}
 }
+The reply to the above command returns the transmission and reception bandwidth per switch per port in bits per second. The default interval when the bandwidth is reassessed by the controller is every 10 seconds \cite{stats}.
+
+\subsubsection{Determine active flows}
+As described in section 4.3.2, the structure 'switchHostsFlows' keeps track of the last known packet count for a particular flow from a host to a destination. The application queries the controller to poll the switches for a list of flow statistics every 10 seconds using the command:
+\textit{
+\begin{center}
+"curl -s http://<controllerIp>/wm/core/switch/<switchDPID>'/flow/json" 
+\end{center}
+}
+For each shortest default path flow rule returned, the application checks if the source IP is from the same subnet as an interface from the switch DPID being polled by comparing to the list of switch hosts in 'switchHostsFlows'. If determined to be the gateway switch for that flow, the new packet count is compared to the stored last known packet count to determine if the flow is active. If a flow is found active, the function to calculate bandwidth for all alternate paths is called.
 
 \bibliographystyle{ieeetr}% Select the citation style e.g. ieeetr
 \bibliography{Smartgrid}% write the directory to the .bib file
