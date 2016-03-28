@@ -121,7 +121,7 @@ The topology constructed in GENI portal is shown in Figure \ref{Fig 4.1}. *May r
 Each of the OpenFlow switches (OVS) have a Datapath id (DPID) associated with them which is used by the SDN controller to identify and control the switches. Using the web interface of the Floodlight controller, we can see the switches connected to the controller and the various information statistics related to them in Figure \ref{Fig 4.2}.
 \begin{figure}[H]
 \begin{center}
-\includegraphics[scale=0.55]{topology.png}   
+\includegraphics[scale=0.4]{topology.png}   
 \end{center}
  \caption{GENI topology}
  \label{Fig 4.1}
@@ -142,7 +142,7 @@ We can also see the OpenFlow rules that a switch is configured with in Figure \r
  \label{Fig 4.3}
 \end{figure}
 \subsection{Flow of the application}
-The control flow of the application starts from constructing the network graph, polling the OpenFlow switches using the floodlight REST API to find active flows and then uses the statistics collector module of floodlight to query link statistics. Based on the statistics received, the application chooses a different but better path for active flows based on link bandwidth.
+The control flow of the application starts from constructing the network graph, polling the OpenFlow switches using the floodlight REST API to find active flows and then uses the statistics collector module of floodlight to query link statistics. Based on the statistics received, the application chooses a different path for active flows based on available link bandwidth.
 \\
 \\
 The design decisions taken are the following:
@@ -152,11 +152,40 @@ The design decisions taken are the following:
 \item The different simple paths are only on an end-to-end basis for a pair of hosts. A simple path means that no node is repeated between a path between two hosts.
 \item A switch can only decide to change the path for a flow if the sender's IP is on the same subnet as the switch's interface.
 \item The active flows are decided by polling the switches every 10 seconds and comparing the last packets hit count with the new polled information.
-\item ***How the application selects the path based on bandwidth and list of simple paths between the two hosts***
-\item The QoS rule written by the controller in the switches for a particular flow has an idle timeout of 60 seconds.
+\item The application selects a different path based on aggregate available bandwidth from a list of simple paths between the source and the destination.
+\item The QoS rule written by the controller in the switches for a particular flow has an idle timeout of 10 seconds.
 
 \end{itemize}
 
+\subsubsection{Constructing the topology}
+The application reads in the RSpec XML document from GENI portal and parses information about the names and interfaces of the nodes. The Python library used for parsing is "untangle" which converts XML to python objects. The node data items consist of the IP address, MAC address and port number for each of the interfaces connected to that node. The application then queries the controller using REST API commands to get respective OpenFlow Datapath ids (DPIDs) for the switches in the topology.
+\\
+\\
+For constructing the network graph, Python library "Networkx" is used which provides data structures for constructing network graphs. The library creates a Network object to which nodes and edges can be added. The nodes have the data items for interfaces as described above as well as the DPID matched to the nodes using the controller information. 
+\\
+\\
+Since the RSpec document or the controller do not provide information about the neighbors of the nodes or which interface is connected to which neighbor, the inter-host links are identified by matching the respective IP addresses in order to construct the edges between the nodes for the graph.
+
+\subsubsection{Identifying hosts connected to the switches}
+As mentioned in the design decisions, A switch can only decide to change the path for a flow if the sender's IP is on the same subnet as the switch's interface. To implement this, a structure is constructed which specifies which hosts are on the switch subnet and which are the interfaces that connect to another switch instead of a host. It also specifies the possible source and destination pairs of a switch's traffic after polling all the shortest path flows in the OpenFlow table of that switch. This structure also maintains the flow statistics for each pair of source and destination hosts in the form of the last packet count. This information is later used to determine active flows in the network.
+\\
+\\
+The hosts connected to the switch are identified by comparing the network address of interfaces of the hosts to the /24 network prefix of the interfaces of the particular switch. This structure only references the nodes which play the role of "hosts" on the network and not the ones which play the role of "switches".
+
+\subsubsection{Enabling statistics collection}
+In order to take advantage of the Floodlight controller statistics module REST API, it needs to be enabled in all the OpenFlow switches in the network. The command used to enable the statistics collection in the application is:
+\\
+\textit{
+\begin{center}
+"curl -X POST -d ' ' http://< controllerIp>/wm/statistics/config/enable/json"
+\end{center}
+}
+After statistics are enabled in the switches, the application can query the controller using the REST API commands specifying the switch using OpenFlow DPID and the desired port using the following command:
+\textit{
+\begin{center}
+"curl http://<controllerIp>/wm/statistics/bandwidth/<switchDPID>/<port>/json"
+\end{center}
+}
 
 \bibliographystyle{ieeetr}% Select the citation style e.g. ieeetr
 \bibliography{Smartgrid}% write the directory to the .bib file
