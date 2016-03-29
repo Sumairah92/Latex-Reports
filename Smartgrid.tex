@@ -6,7 +6,7 @@
 %%% Date: March 2011
 
 %%% Preamble
-\documentclass[paper=a4, fontsize=11pt]{scrartcl}	% Article class of KOMA-script with 11pt font and a4 format
+\documentclass[paper=a4, fontsize=12pt]{scrartcl}	% Article class of KOMA-script with 11pt font and a4 format
 \usepackage[T1]{fontenc}
 \usepackage{fourier}
 \usepackage[section]{placeins}
@@ -149,11 +149,12 @@ The design decisions taken are the following:
 \begin{itemize}
 \item The topology is constructed using Python Networkx library undirected graph. The information for the nodes and the edges is received from the GENI RSpec document as well as the Floodlight controller REST API calls.
 \item The bandwidth statistics from the statistics collector module of floodlight queries the links every 10 seconds.
-\item The different simple paths are only on an end-to-end basis for a pair of hosts. A simple path means that no node is repeated between a path between two hosts.
+\item The different simple paths are only on an end-to-end basis for a pair of hosts. A simple path means that no node is repeated in a path between two hosts.
 \item A switch can only decide to change the path for a flow if the sender's IP is on the same subnet as the switch's interface.
 \item The active flows are decided by polling the switches every 10 seconds and comparing the last packets hit count with the new polled information.
 \item The application selects a different path based on aggregate available bandwidth from a list of simple paths between the source and the destination.
-\item The QoS rule written by the controller in the switches for a particular flow has an idle timeout of 10 seconds.
+\item The aggregate available bandwidth for a path is actually the minimum available link bandwidth on the set of inter-switch links on that path.
+\item The QoS rule written by the controller in the switches for a particular flow has an OpenFlow priority of `3' which makes sure that it receives precedence to any default shortest path rules for the same flow with priority `1'.
 
 \end{itemize}
 
@@ -191,7 +192,7 @@ The hosts connected to the switch are identified by comparing the network addres
 In order to take advantage of the Floodlight controller statistics module REST API, it needs to be enabled in all the OpenFlow switches in the network. The command used to enable the statistics collection in the application is:
 \textit{
 \begin{center}
-"curl -X POST -d ' ' http://< controllerIp>/wm/statistics/config/enable/json"
+"curl -X POST -d ` ' http://< controllerIp>/wm/statistics/config/enable/json"
 \end{center}
 }
 After statistics are enabled in the switches, the application can query the controller using the REST API commands specifying the switch using OpenFlow DPID and the desired port using the following command:
@@ -201,9 +202,10 @@ After statistics are enabled in the switches, the application can query the cont
 \end{center}
 }
 The reply to the above command returns the transmission and reception bandwidth per switch per port in bits per second. The default interval when the bandwidth is reassessed by the controller is every 10 seconds \cite{stats}.
-
+\subsubsection{Identifying inter-switch links}
+The application also creates a list of links between the switches and the respective output switch ports for those links called the "interswitchLinks". This is important because the bandwidth calculation for paths is done solely on the basis of available bandwidth on the switch-switch links and not the switch-host links.
 \subsubsection{Determine active flows}
-As described in section 4.3.2, the structure 'switchHostsFlows' keeps track of the last known packet count for a particular flow from a host to a destination. The application queries the controller to poll the switches for a list of flow statistics every 10 seconds using the command:
+As described in section 4.3.2, the structure "switchHostsFlows" keeps track of the last known packet count for a particular flow from a host to a destination. The application queries the controller to poll the switches for a list of flow statistics every 10 seconds using the command:
 \textit{
 \begin{center}
 "curl -s http://<controllerIp>/wm/core/switch/<switchDPID>'/flow/json" 
@@ -211,6 +213,34 @@ As described in section 4.3.2, the structure 'switchHostsFlows' keeps track of t
 }
 For each shortest default path flow rule returned, the application checks if the source IP is from the same subnet as an interface from the switch DPID being polled by comparing to the list of switch hosts in 'switchHostsFlows'. If determined to be the gateway switch for that flow, the new packet count is compared to the stored last known packet count to determine if the flow is active. If a flow is found active, the function to calculate bandwidth for all alternate paths is called.
 
+\subsubsection{Calculate available bandwidth for alternate paths}
+The "calculate bandwidth for paths function" receives two arguments; a source and a target. The function calculates all simple paths between the source and the target using "all\_simple\_paths" method of the Python Networkx library. A simple path means that no node is repeated in a path between two hosts. If there is only one simple path returned, no alternate path is present between the two hosts i.e. only the shortest default path is available and the program returns to polling other active flows.
+\\
+\\
+Using the information from the "interswitchLinks", the function uses the curl command from section 4.3.3 to get the transmission (TX) and reception bandwidth (RX) per switch per inter-switch port in bits per second. The TX and RX values are added to find the bandwidth usage in bits per second and then subtracted from the actual known link bandwidth to get available link bandwidth for each switch port and stored in a structure for using in path selection.
+\\
+\\
+For each simple path calculated for a source-target pair, the function decides which switches and inter-switch ports are involved on that path. Using the stored bandwidth statistics, it calculates the available bandwidth for each path by finding the minimum available bandwidth for a link involved in that path.
+\\
+\\
+After calculating available bandwidths on all paths, the function checks if any of the bandwidth values are better than the default shortest path. If yes, then it chooses the path with the best available value and returns the path. If not, then the function returns none and the flow remains on shortest path.
+
+\subsubsection{Generate rule for path}
+The "generate rule for path" function is called if the "calculate bandwidth for paths function" returns an alternate path for a pair of hosts. The function takes in three arguments; a path which is returned by the bandwidth function, a source IP and a destination IP. The function first checks the OpenFlow rule table of the switches involved in that path for a match of a priority `3' rule for the same source and destination IP using the following command.
+\textit{
+\begin{center}
+"curl -s http://<controllerIp>/wm/staticflowpusher/list/<switchDPID>/json" 
+\end{center}
+}
+If a rule already exists, the function returns and does not generate a new priority `3' rule. If no rule exists, the function determines the node and the next hop interface for each node in the path, finds the MAC address and switch port for forwarding and constructs a flow rule in JSON format to send via the static flow pusher REST API of Floodlight controller. A sample flow rule is shown in *FIG*. The command used by the application to push a generated flow through the controller to the switch is:
+\textit{
+\begin{center}
+"curl -X POST -d `"+<JSON\_rule>+"' http://<controllerIp>/wm/staticflowpusher/json" 
+\end{center}
+}
+\section{Results}
+\section{Challenges}
+\section{Conclusion}
 \bibliographystyle{ieeetr}% Select the citation style e.g. ieeetr
 \bibliography{Smartgrid}% write the directory to the .bib file
 %%% End document

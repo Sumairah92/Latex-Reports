@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.16 (MiKTeX 2.9 64-bit) (preloaded format=pdflatex 2015.11.12)  28 MAR 2016 17:55
+This is pdfTeX, Version 3.14159265-2.6-1.40.16 (MiKTeX 2.9 64-bit) (preloaded format=pdflatex 2015.11.12)  29 MAR 2016 14:51
 entering extended mode
 **Smartgrid.tex
 (Smartgrid.tex
@@ -37,11 +37,11 @@ Package tocbasic Info: omitting babel extension for `lof'
 Package tocbasic Info: omitting babel extension for `lot'
 (tocbasic)             because of feature `nobabel' available
 (tocbasic)             for `lot' on input line 125.
-Class scrartcl Info: File `scrsize11pt.clo' used to setup font sizes on input l
+Class scrartcl Info: File `scrsize12pt.clo' used to setup font sizes on input l
 ine 2033.
 
-(C:\Miktex\tex\latex\koma-script\scrsize11pt.clo
-File: scrsize11pt.clo 2015/10/03 v3.19a KOMA-Script font size class option (11p
+(C:\Miktex\tex\latex\koma-script\scrsize12pt.clo
+File: scrsize12pt.clo 2015/10/03 v3.19a KOMA-Script font size class option (12p
 t)
 )
 (C:\Miktex\tex\latex\koma-script\typearea.sty
@@ -58,21 +58,21 @@ Package typearea, 2015/10/03 v3.19a KOMA-Script package (type area)
 \ta@temp=\skip44
 \footheight=\skip45
 Package typearea Info: These are the values describing the layout:
-(typearea)             DIV  = 10
+(typearea)             DIV  = 12
 (typearea)             BCOR = 0.0pt
 (typearea)             \paperwidth      = 597.50793pt
-(typearea)              \textwidth      = 418.25555pt
+(typearea)              \textwidth      = 448.13095pt
 (typearea)              DIV departure   = -6%
-(typearea)              \evensidemargin = 17.3562pt
-(typearea)              \oddsidemargin  = 17.3562pt
+(typearea)              \evensidemargin = 2.4185pt
+(typearea)              \oddsidemargin  = 2.4185pt
 (typearea)             \paperheight     = 845.04694pt
-(typearea)              \textheight     = 595.80026pt
-(typearea)              \topmargin      = -25.16531pt
-(typearea)              \headheight     = 17.0pt
-(typearea)              \headsep        = 20.40001pt
-(typearea)              \topskip        = 11.0pt
-(typearea)              \footskip       = 47.6pt
-(typearea)              \baselineskip   = 13.6pt
+(typearea)              \textheight     = 635.5pt
+(typearea)              \topmargin      = -41.72441pt
+(typearea)              \headheight     = 18.125pt
+(typearea)              \headsep        = 21.75pt
+(typearea)              \topskip        = 12.0pt
+(typearea)              \footskip       = 50.75pt
+(typearea)              \baselineskip   = 14.5pt
 (typearea)              on input line 1509.
 )
 \c@part=\count80
@@ -559,7 +559,7 @@ File: ot1bch.fd 2004/10/18 font definitions for OT1/bch.
 File: mt-bch.cfg 2007/03/03 v1.5 microtype config. file: Bitstream Charter (RS)
 
 )
-LaTeX Font Info:    Font shape `T1/futs/bx/sc' in size <10.95> not available
+LaTeX Font Info:    Font shape `T1/futs/bx/sc' in size <12> not available
 (Font)              Font shape `T1/futs/b/sc' tried instead on input line 71.
 LaTeX Font Info:    Try loading font information for FML+futmi on input line 71
 .
@@ -568,17 +568,17 @@ LaTeX Font Info:    Try loading font information for FML+futmi on input line 71
 File: fmlfutmi.fd 2004/10/30 Fontinst v1.926 font definitions for FML/futmi.
 )
 LaTeX Font Info:    Font shape `FMX/futm/m/n' will be
-(Font)              scaled to size 13.24796pt on input line 71.
+(Font)              scaled to size 15.89755pt on input line 71.
 LaTeX Font Info:    Font shape `FMX/futm/m/n' will be
-(Font)              scaled to size 9.19998pt on input line 71.
+(Font)              scaled to size 11.03998pt on input line 71.
 LaTeX Font Info:    Font shape `FMX/futm/m/n' will be
-(Font)              scaled to size 7.35999pt on input line 71.
+(Font)              scaled to size 8.27998pt on input line 71.
 LaTeX Font Info:    Font shape `U/futm/m/n' will be
-(Font)              scaled to size 13.24796pt on input line 71.
+(Font)              scaled to size 15.89755pt on input line 71.
 LaTeX Font Info:    Font shape `U/futm/m/n' will be
-(Font)              scaled to size 9.19998pt on input line 71.
+(Font)              scaled to size 11.03998pt on input line 71.
 LaTeX Font Info:    Font shape `U/futm/m/n' will be
-(Font)              scaled to size 7.35999pt on input line 71.
+(Font)              scaled to size 8.27998pt on input line 71.
 LaTeX Font Info:    Try loading font information for U+msa on input line 71.
  (C:\Miktex\tex\latex\amsfonts\umsa.fd
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
@@ -604,23 +604,15 @@ Class scrartcl Warning: incompatible usage of \@ssect detected.
 (scrartcl)              This could result in several error messages on input li
 ne 77.
 
-LaTeX Font Info:    Font shape `T1/futs/bx/sc' in size <14.4> not available
+LaTeX Font Info:    Font shape `T1/futs/bx/sc' in size <17.28> not available
 (Font)              Font shape `T1/futs/b/sc' tried instead on input line 77.
 Package tocbasic Info: character protrusion at toc deactivated on input line 77
 .
 (Smartgrid.toc
 LaTeX Font Info:    Font shape `FMX/futm/m/n' will be
-(Font)              scaled to size 10.07397pt on input line 4.
-LaTeX Font Info:    Font shape `FMX/futm/m/n' will be
-(Font)              scaled to size 7.63599pt on input line 4.
-LaTeX Font Info:    Font shape `FMX/futm/m/n' will be
-(Font)              scaled to size 5.51999pt on input line 4.
+(Font)              scaled to size 6.43999pt on input line 4.
 LaTeX Font Info:    Font shape `U/futm/m/n' will be
-(Font)              scaled to size 10.07397pt on input line 4.
-LaTeX Font Info:    Font shape `U/futm/m/n' will be
-(Font)              scaled to size 7.63599pt on input line 4.
-LaTeX Font Info:    Font shape `U/futm/m/n' will be
-(Font)              scaled to size 5.51999pt on input line 4.
+(Font)              scaled to size 6.43999pt on input line 4.
 )
 \tf@toc=\write3
 LaTeX Font Info:    Try loading font information for T1+cmtt on input line 78.
@@ -632,9 +624,17 @@ Package microtype Info: Loading generic settings for font family
 (microtype)             For optimal results, create family-specific settings.
 (microtype)             See the microtype manual for details.
 LaTeX Font Info:    Font shape `FMX/futm/m/n' will be
-(Font)              scaled to size 6.99199pt on input line 78.
+(Font)              scaled to size 10.07397pt on input line 78.
+LaTeX Font Info:    Font shape `FMX/futm/m/n' will be
+(Font)              scaled to size 7.63599pt on input line 78.
+LaTeX Font Info:    Font shape `FMX/futm/m/n' will be
+(Font)              scaled to size 5.51999pt on input line 78.
 LaTeX Font Info:    Font shape `U/futm/m/n' will be
-(Font)              scaled to size 6.99199pt on input line 78.
+(Font)              scaled to size 10.07397pt on input line 78.
+LaTeX Font Info:    Font shape `U/futm/m/n' will be
+(Font)              scaled to size 7.63599pt on input line 78.
+LaTeX Font Info:    Font shape `U/futm/m/n' will be
+(Font)              scaled to size 5.51999pt on input line 78.
  [1]
 Underfull \hbox (badness 10000) in paragraph at lines 81--88
 
@@ -645,7 +645,7 @@ Underfull \hbox (badness 10000) in paragraph at lines 81--88
 
  []
 
-LaTeX Font Info:    Font shape `T1/futs/bx/sc' in size <12> not available
+LaTeX Font Info:    Font shape `T1/futs/bx/sc' in size <14.4> not available
 (Font)              Font shape `T1/futs/b/sc' tried instead on input line 92.
 
 Underfull \hbox (badness 10000) in paragraph at lines 93--100
@@ -685,7 +685,7 @@ File: rules.png Graphic file (type png)
 Package pdftex.def Info: rules.png used on input line 139.
 (pdftex.def)             Requested size: 448.63278pt x 133.85207pt.
 
-Overfull \hbox (30.37723pt too wide) in paragraph at lines 139--140
+Overfull \hbox (0.50183pt too wide) in paragraph at lines 139--140
  [] 
  []
 
@@ -704,16 +704,31 @@ Package microtype Info: Loading generic settings for font family
 (microtype)             For optimal results, create family-specific settings.
 (microtype)             See the microtype manual for details.
  [6 <./rules.png>]
-Underfull \hbox (badness 10000) in paragraph at lines 179--183
+Underfull \hbox (badness 10000) in paragraph at lines 180--184
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 185--189
+Underfull \hbox (badness 10000) in paragraph at lines 186--190
 
  []
 
-[7] (Smartgrid.bbl
+[7] [8]
+Underfull \hbox (badness 10000) in paragraph at lines 217--227
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 217--227
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 217--227
+
+ []
+
+[9] (Smartgrid.bbl
 
 Class scrartcl Warning: incompatible usage of \@ssect detected.
 (scrartcl)              You've used the KOMA-Script implementation of \@ssect
@@ -722,29 +737,29 @@ Class scrartcl Warning: incompatible usage of \@ssect detected.
 (scrartcl)              This could result in several error messages on input li
 ne 1.
 
-[8]
+
 Underfull \hbox (badness 10000) in paragraph at lines 44--46
-[]\T1/futs/m/n/10.95 (+20) R. Izard, ``How to col-lect switch statis-tics (and 
-com-pute band-width).''
+[]\T1/futs/m/n/12 (+20) R. Izard, ``How to col-lect switch statis-tics (and com
+-pute band-width).''
  []
 
-) [9] (Smartgrid.aux) ) 
+[10]) [11] (Smartgrid.aux) ) 
 Here is how much of TeX's memory you used:
- 7054 strings out of 493673
- 105174 string characters out of 3151272
- 249352 words of memory out of 3000000
+ 7049 strings out of 493673
+ 105105 string characters out of 3151272
+ 250386 words of memory out of 3000000
  10032 multiletter control sequences out of 15000+200000
- 134624 words of font info for 261 fonts, out of 3000000 for 9000
+ 134286 words of font info for 256 fonts, out of 3000000 for 9000
  1025 hyphenation exceptions out of 8191
- 41i,12n,47p,773b,488s stack positions out of 5000i,500n,10000p,200000b,50000s
-{C:/Miktex/fonts/enc/dvips/fontname/8r.enc} <C:\Users\SS
-H273\AppData\Local\MiKTeX\2.9\fonts\pk\ljfour\jknappen\ec\dpi600\ectt1000.pk> <
-C:\Users\SSH273\AppData\Local\MiKTeX\2.9\fonts\pk\ljfour\jknappen\ec\dpi600\ecs
-x1095.pk><C:/Miktex/fonts/type1/adobe/utopia/putb8a.pfb><C:/Miktex/fonts/type1/
-adobe/utopia/putr8a.pfb><C:/Miktex/fonts/type1/adobe/utopia/putri8a.pfb>
-Output written on Smartgrid.pdf (10 pages, 280400 bytes).
+ 41i,12n,47p,773b,490s stack positions out of 5000i,500n,10000p,200000b,50000s
+{C:/Miktex/fonts/enc/dvips/fontname/8r.enc} <C:\Use
+rs\SSH273\AppData\Local\MiKTeX\2.9\fonts\pk\ljfour\jknappen\ec\dpi600\ectt1095.
+pk> <C:\Users\SSH273\AppData\Local\MiKTeX\2.9\fonts\pk\ljfour\jknappen\ec\dpi60
+0\ecsx1200.pk><C:/Miktex/fonts/type1/adobe/utopia/putb8a.pfb><C:/Miktex/fonts/t
+ype1/adobe/utopia/putr8a.pfb><C:/Miktex/fonts/type1/adobe/utopia/putri8a.pfb>
+Output written on Smartgrid.pdf (12 pages, 279865 bytes).
 PDF statistics:
- 104 PDF objects out of 1000 (max. 8388607)
+ 110 PDF objects out of 1000 (max. 8388607)
  0 named destinations out of 1000 (max. 500000)
  33808 words of extra memory for PDF output out of 35830 (max. 10000000)
 
