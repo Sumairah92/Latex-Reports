@@ -232,12 +232,19 @@ The "generate rule for path" function is called if the "calculate bandwidth for 
 "curl -s http://<controllerIp>/wm/staticflowpusher/list/<switchDPID>/json" 
 \end{center}
 }
-If a rule already exists, the function returns and does not generate a new priority `3' rule. If no rule exists, the function determines the node and the next hop interface for each node in the path, finds the MAC address and switch port for forwarding and constructs a flow rule in JSON format to send via the static flow pusher REST API of Floodlight controller. A sample flow rule is shown in *FIG*. The command used by the application to push a generated flow through the controller to the switch is:
+If a rule already exists, the function returns and does not generate a new priority `3' rule. If no rule exists, the function determines the node and the next hop interface for each node in the path, finds the MAC address and switch port for forwarding and constructs a flow rule in JSON format to send via the static flow pusher REST API of Floodlight controller. A sample flow rule is shown in Figure \ref{Fig 4.4}. The command used by the application to push a generated flow through the controller to the switch is:
 \textit{
 \begin{center}
 "curl -X POST -d `"+<JSON\_rule>+"' http://<controllerIp>/wm/staticflowpusher/json" 
 \end{center}
 }
+\begin{figure}[H]
+\begin{center}
+\includegraphics[scale=0.45]{flow.png}   
+\end{center}
+ \caption{A sample flow}
+ \label{Fig 4.4}
+\end{figure}
 \section{Results}
 \section{Challenges}
 \section{Conclusion}
