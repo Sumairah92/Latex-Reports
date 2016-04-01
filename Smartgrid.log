@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.16 (TeX Live 2015) (preloaded format=pdflatex 2015.5.24)  31 MAR 2016 20:58
+This is pdfTeX, Version 3.14159265-2.6-1.40.16 (TeX Live 2015) (preloaded format=pdflatex 2015.5.24)  1 APR 2016 12:12
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -782,21 +782,61 @@ Overfull \hbox (32.00844pt too wide) in paragraph at lines 253--254
  [] 
  []
 
-[10] (./Smartgrid.bbl [11 <./flow.png>]
+[10] <shortest.png, id=50, 771.88374pt x 553.06625pt>
+File: shortest.png Graphic file (type png)
+ <use shortest.png>
+Package pdftex.def Info: shortest.png used on input line 262.
+(pdftex.def)             Requested size: 347.34447pt x 248.8775pt.
+
+<h1-h3.png, id=51, 325.215pt x 334.24875pt>
+File: h1-h3.png Graphic file (type png)
+ <use h1-h3.png>
+Package pdftex.def Info: h1-h3.png used on input line 271.
+(pdftex.def)             Requested size: 146.3454pt x 150.41054pt.
+ [11 <./flow.png> <./shortest.png>] <h2-h3.png, id=57, 394.47375pt x 319.1925pt
+>
+File: h2-h3.png Graphic file (type png)
+ <use h2-h3.png>
+Package pdftex.def Info: h2-h3.png used on input line 278.
+(pdftex.def)             Requested size: 177.51154pt x 143.63528pt.
+
+<qos.png, id=58, 771.88374pt x 553.06625pt>
+File: qos.png Graphic file (type png)
+ <use qos.png>
+Package pdftex.def Info: qos.png used on input line 286.
+(pdftex.def)             Requested size: 347.34447pt x 248.8775pt.
+ [12 <./h1-h3.png> <./h2-h3.png>] <h123WO.png, id=65, 747.79375pt x 346.29375pt
+>
+File: h123WO.png Graphic file (type png)
+ <use h123WO.png>
+Package pdftex.def Info: h123WO.png used on input line 295.
+(pdftex.def)             Requested size: 336.50407pt x 155.83073pt.
+
+<h123W.png, id=66, 746.79pt x 345.29pt>
+File: h123W.png Graphic file (type png)
+ <use h123W.png>
+Package pdftex.def Info: h123W.png used on input line 302.
+(pdftex.def)             Requested size: 336.05238pt x 155.37904pt.
+ [13 <./qos.png> <./h123WO.png>] [14 <./h123W.png>] (./Smartgrid.bbl
+Underfull \hbox (badness 10000) in paragraph at lines 318--1
+
+ []
+
+[15]
 Underfull \hbox (badness 10000) in paragraph at lines 44--46
 []\T1/futs/m/n/12 (+20) R. Izard, ``How to col-lect switch statis-tics (and com
 -pute band-width).''
  []
 
-) [12] (./Smartgrid.aux) ) 
+) [16] (./Smartgrid.aux) ) 
 Here is how much of TeX's memory you used:
- 7417 strings out of 493089
- 115219 string characters out of 6134842
- 257077 words of memory out of 5000000
- 10495 multiletter control sequences out of 15000+600000
+ 7453 strings out of 493089
+ 115663 string characters out of 6134842
+ 257143 words of memory out of 5000000
+ 10525 multiletter control sequences out of 15000+600000
  135096 words of font info for 265 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 47i,12n,47p,773b,489s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 47i,12n,47p,847b,485s stack positions out of 5000i,500n,10000p,200000b,80000s
 {/usr/local/texlive/2015/texmf-dist/fonts/enc/dvips/b
 ase/8r.enc}{/usr/local/texlive/2015/texmf-dist/fonts/enc/dvips/cm-super/cm-supe
 r-t1.enc}</usr/local/texlive/2015/texmf-dist/fonts/type1/adobe/utopia/putb8a.pf
@@ -804,10 +844,10 @@ b></usr/local/texlive/2015/texmf-dist/fonts/type1/adobe/utopia/putr8a.pfb></usr
 /local/texlive/2015/texmf-dist/fonts/type1/adobe/utopia/putri8a.pfb></usr/local
 /texlive/2015/texmf-dist/fonts/type1/public/cm-super/sfsx1200.pfb></usr/local/t
 exlive/2015/texmf-dist/fonts/type1/public/cm-super/sftt1095.pfb>
-Output written on Smartgrid.pdf (13 pages, 338932 bytes).
+Output written on Smartgrid.pdf (17 pages, 531384 bytes).
 PDF statistics:
- 78 PDF objects out of 1000 (max. 8388607)
- 49 compressed objects within 1 object stream
+ 102 PDF objects out of 1000 (max. 8388607)
+ 57 compressed objects within 1 object stream
  0 named destinations out of 1000 (max. 500000)
- 33813 words of extra memory for PDF output out of 35830 (max. 10000000)
+ 33843 words of extra memory for PDF output out of 35830 (max. 10000000)
 

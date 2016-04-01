@@ -18,6 +18,9 @@
 \contentsline {subsubsection}{\numberline {4.3.6}Calculate available bandwidth for alternate paths}{9}
 \contentsline {paragraph}{\nonumberline Global QoS rules structure}{9}
 \contentsline {subsubsection}{\numberline {4.3.7}Generate rule for path}{10}
-\contentsline {section}{\numberline {5}Results}{11}
-\contentsline {section}{\numberline {6}Challenges}{11}
-\contentsline {section}{\numberline {7}Conclusion}{11}
+\contentsline {section}{\numberline {5}Results (Preliminary)}{11}
+\contentsline {section}{\numberline {6}Challenges}{14}
+\contentsline {paragraph}{\nonumberline Floodlight default l2 learning switch:}{14}
+\contentsline {paragraph}{\nonumberline Bandwidth design decision}{14}
+\contentsline {paragraph}{\nonumberline Dynamic path changing:}{15}
+\contentsline {section}{\numberline {7}Conclusion}{15}

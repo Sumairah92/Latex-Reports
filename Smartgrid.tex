@@ -227,13 +227,13 @@ In order to keep track of all the QoS flows of priority `3' added in the topolog
 \begin{itemize}
 \item If the list is empty at the time application detects the very first active flow, the shortest default path is added as a QoS rule for that flow since all the links have the same available bandwidth. This path is stored in the global list so no other flow will be assigned this path.
 \item The second purpose is to check if a rule already exists in the global list for a flow so that there is no need to make further path changes for a flow.
-\item The third role of the list is to check for a given source-target, a reverse path "target-source" exists in the list. If yes, then the reverse path is added to the list and also sent to the rule generation function.
+\item The third role of the list is to check if for a given source-target, a reverse path "target-source" exists in the list. If yes, then the reverse path is added to the list and also sent to the rule generation function.
 \item The final purpose of this list is to find best possible unused or unshared inter-switch link paths for each incoming active flow based on length of path and aggregate available bandwidth.
 \end{itemize}
 For each simple path calculated for a source-target pair, the function decides which switches and inter-switch ports are involved on that path. Using the stored bandwidth statistics, it calculates the available bandwidth for each path by finding the minimum available bandwidth for a link involved in that path.
 \\
 \\
-After calculating available bandwidths on all paths, the function checks if any of the bandwidth values are better than the default shortest path. If yes, then it chooses the path with the best available value and returns the path. If not, then the function returns none and the flow remains on shortest path.
+After calculating available bandwidths on all paths, the function checks if the paths are valid unused or unshared paths by checking the global QoS flows list. Then the function checks if any of the bandwidth values of the valid paths are better than the default shortest path. If yes, then it chooses the next shortest path with the best available value, adds it to QoS flows list and returns the path. If not, then the function returns none since there is no path available that will guarantee good bandwidth without compromising other competing traffic and the flow remains on shortest path.
 
 \subsubsection{Generate rule for path}
 The "generate rule for path" function is called if the "calculate bandwidth for paths function" returns an alternate path for a pair of hosts. The function takes in three arguments; a path which is returned by the bandwidth function, a source IP and a destination IP. The function first checks the OpenFlow rule table of the switches involved in that path for a match of a priority `3' rule for the same source and destination IP using the following command.
@@ -255,9 +255,70 @@ If a rule already exists, the function returns and does not generate a new prior
  \caption{A sample flow}
  \label{Fig 4.4}
 \end{figure}
-\section{Results}
+\section{Results (Preliminary)}
+To test the effectiveness of the applicaton, we need to test throughput achieved with competing traffic with and without the application running. We will test this by sending traffic from host 1 (h1) to host 3 (h3) and host 2 (h2) to host 3 (h3) at the same time. Figure \ref{Fig 5.1} shows the shortest path setup from h1-h3 and h2-h3 without the application running.
+\begin{figure}[H]
+\begin{center}
+\includegraphics[scale=0.45]{shortest.png}   
+\end{center}
+ \caption{Shortest paths from h1,h2 to h3}
+ \label{Fig 5.1}
+\end{figure}
+
+After running the application, we run "iperf" from h1 to h3 and since this is the first active flow, the shortest path is added as a QoS flow for h1-h3 and also a reverse path for h3-h1 as shown in Figure \ref{Fig 5.2}. Next, we run "iperf"  from h2 to h3. The application discovers the active flow, queries for link bandwidth and chooses the next shortest and unused path with the better bandwidth for h2-h3 as shown in Figure \ref{Fig 5.3}.
+\begin{figure}[H]
+\begin{center}
+\includegraphics[scale=0.45]{h1-h3.png}   
+\end{center}
+ \caption{Application output for QoS Flow from h1-h3 and h3-h1}
+ \label{Fig 5.2}
+\end{figure}
+\begin{figure}[H]
+\begin{center}
+\includegraphics[scale=0.45]{h2-h3.png}   
+\end{center}
+ \caption{Application output for QoS Flow from h2-h3 and h3-h2}
+ \label{Fig 5.3}
+\end{figure}
+Figure \ref{Fig 5.4} shows the final set up for the paths for h1-h3 and h2-h3 with the application running.
+\begin{figure}[H]
+\begin{center}
+\includegraphics[scale=0.45]{qos.png}   
+\end{center}
+ \caption{New QoS paths from h1,h2 to h3}
+ \label{Fig 5.4}
+\end{figure}
+
+To test the throughput, we will "iperf" from h1-h3 and h2-h3 at the same time. The maximum link bandwidth that can be achieved is 50 Mbps. Figure \ref{Fig 5.5} shows the results achieved without the QoS application running and Figure \ref{Fig 5.6} shows the results achieved with the QoS application running using the paths shows in \ref{Fig 5.4}. 
+\begin{figure}[H]
+\begin{center}
+\includegraphics[scale=0.45]{h123WO.png}   
+\end{center}
+ \caption{Iperf results from h1,h2 to h3 without application}
+ \label{Fig 5.5}
+\end{figure}
+\begin{figure}[H]
+\begin{center}
+\includegraphics[scale=0.45]{h123W.png}   
+\end{center}
+ \caption{Iperf results from h1,h2 to h3 with application}
+ \label{Fig 5.6}
+\end{figure}
+It is clear that the QoS application paths achieve near link bandwidth in case of competing traffic targeted at the same destination.
 \section{Challenges}
+There were a few challenges that were faced during the experiment setup.
+\paragraph{Floodlight default l2 learning switch:}
+The default modules of Floodlight controller do not have the capability to perform shortest path routing between hosts on different subnets. There is no ARP module that will take care of the ARP requests if we use a simple layer 2 learning switch module in the controller. Therefore, some advanced features of GENI Desktop were used to initialize all the OVS nodes with shortest path rules that modify the Ethernet header after sending all the ARP traffic to the controller. This also requires that the QoS Flow rule action field built by the application must contain clauses which modify the Ethernet header with source and destination MAC address at each hop for each source-destination host IP pair.
+\paragraph{Bandwidth design decision}
+There is also a design decision involved which is the time interval at which the controller statistics module reassesses the bandwidth at the links. The default time used by the controller is 10 seconds and the application uses the default setting. According to Floodlight, the statistics provide a ballpark figure. OpenFlow does not provide any statistics which have the notion of time and the controller needs to calculate bandwidth using raw byte counters at two instances in time and return the value if requested using the statistics module. The 10 second time serves as a tradeoff between getting less error prone bandwidth calculation (to make control plane latency insignificant) and overburdening the switches with statistics requests by the controller to get real time bandwidth \cite{stats}.
+\paragraph{Dynamic path changing:}
+The initial experiment setup changed the path for each flow dynamically based on link bandwidth every 10 seconds if a better path was available. This was not scalable since changing the path continuously does incur overhead at both the northbound and southbound interfaces. Also, it mirrored the same problem since the beginning of internet that all flows tend to choose the same better path with greater bandwidth at one instance in time which congests that path and leave the other alternate paths with more capacity but unused. Since the bandwidth stats are reassessed by the controller every 10 seconds, even if we query the stats every time when a flow is active does not guarantee that the seemingly best path in terms of bandwidth was not assigned to another flow in the same 10 second time period.
+
 \section{Conclusion}
+This project serves to be a proof of concept of how we can use intelligent controller applications to change the default behavior of the network. For dynamic routing based on bandwidth, more work needs to be done to tackle the challenges mentioned in Section 6. Maybe if OpenFlow protocols introduces some standards for adding byte counters with time notion, the overhead and latency incurred at the controller for calculating bandwidth by keeping track of byte counters at two time instances can be avoided and more real time statistics can be sent through the REST API to applications.
+\\
+\\
+This experiment fixes a path for different flows as they arrive if a guaranteed better bandwidth path can be provided to them. This concept can be used to target better service for a higher class of flows either coming from a priority server distinguished by the server IP address, Multiprotocol Label Switching (MPLS) traffic or multimedia traffic from a known server while other flows can remain on the shortest best effort paths. It is shown in the results that the throughput achieved by using the application was almost at the link capacity when competing traffic was targeted to the same destination as compared to ~50\% of link capacity achieved by just shortest path.
 \bibliographystyle{ieeetr}% Select the citation style e.g. ieeetr
 \bibliography{Smartgrid}% write the directory to the .bib file
 %%% End document
