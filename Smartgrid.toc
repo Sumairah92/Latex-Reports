@@ -11,12 +11,13 @@
 \contentsline {subsection}{\numberline {4.2}The network topology and the controller}{4}
 \contentsline {subsection}{\numberline {4.3}Flow of the application}{6}
 \contentsline {subsubsection}{\numberline {4.3.1}Constructing the topology}{7}
-\contentsline {subsubsection}{\numberline {4.3.2}Identifying hosts connected to the switches}{7}
+\contentsline {subsubsection}{\numberline {4.3.2}Identifying hosts connected to the switches}{8}
 \contentsline {subsubsection}{\numberline {4.3.3}Enabling statistics collection}{8}
 \contentsline {subsubsection}{\numberline {4.3.4}Identifying inter-switch links}{8}
-\contentsline {subsubsection}{\numberline {4.3.5}Determine active flows}{8}
+\contentsline {subsubsection}{\numberline {4.3.5}Determine active flows}{9}
 \contentsline {subsubsection}{\numberline {4.3.6}Calculate available bandwidth for alternate paths}{9}
-\contentsline {subsubsection}{\numberline {4.3.7}Generate rule for path}{9}
-\contentsline {section}{\numberline {5}Results}{10}
-\contentsline {section}{\numberline {6}Challenges}{10}
-\contentsline {section}{\numberline {7}Conclusion}{10}
+\contentsline {paragraph}{\nonumberline Global QoS rules structure}{9}
+\contentsline {subsubsection}{\numberline {4.3.7}Generate rule for path}{10}
+\contentsline {section}{\numberline {5}Results}{11}
+\contentsline {section}{\numberline {6}Challenges}{11}
+\contentsline {section}{\numberline {7}Conclusion}{11}

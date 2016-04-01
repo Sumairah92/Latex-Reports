@@ -118,6 +118,7 @@ The experiment is set up in GENI portal using Xen virtual machines as hosts and 
 \subsection{The network topology and the controller}
 The topology constructed in GENI portal is shown in Figure \ref{Fig 4.1}. The topology is not linear and has multiple paths between a pair of hosts in order to have alternate paths for routing flows based on bandwidth. The nodes labeled as switches run Openvswitch on them configured to use an OVS bridge to connect to the hosts and other OVS nodes.
 \\
+\\
 Each of the OpenFlow switches (OVS) have a Datapath id (DPID) associated with them which is used by the SDN controller to identify and control the switches. Using the web interface of the Floodlight controller, we can see the switches connected to the controller and the various information statistics related to them in Figure \ref{Fig 4.2}.
 \begin{figure}[H]
 \begin{center}
@@ -133,7 +134,7 @@ Each of the OpenFlow switches (OVS) have a Datapath id (DPID) associated with th
  \caption{Floodlight dashboard}
  \label{Fig 4.2}
 \end{figure}
-We can also see the OpenFlow rules that a switch is configured with in Figure \ref{Fig 4.3}. Right now, the rules shown are default shortest path rules that the floodlight controller pushed into the switches using the static flow pusher REST API.
+We can also see the OpenFlow rules that a switch is configured with in Figure \ref{Fig 4.3}. Right now, the rules shown are default shortest path rules with OpenFlow priority `1' that the floodlight controller pushed into the switches using the static flow pusher REST API.
 \begin{figure}[H]
 \begin{center}
 \includegraphics[scale=0.35]{rules.png}   
@@ -142,19 +143,22 @@ We can also see the OpenFlow rules that a switch is configured with in Figure \r
  \label{Fig 4.3}
 \end{figure}
 \subsection{Flow of the application}
-The control flow of the application starts from constructing the network graph, polling the OpenFlow switches using the floodlight REST API to find active flows and then uses the statistics collector module of floodlight to query link statistics. Based on the statistics received, the application chooses a different path for active flows based on available link bandwidth.
+The control flow of the application starts from constructing the network graph, polling the OpenFlow switches using the floodlight REST API to find active flows and then uses the statistics collector module of floodlight to query link statistics. Based on the statistics received, the application chooses a different path for each active flow based on available link bandwidth.
 \\
 \\
 The design decisions taken are the following:
 \begin{itemize}
 \item The topology is constructed using Python Networkx library undirected graph. The information for the nodes and the edges is received from the GENI RSpec document as well as the Floodlight controller REST API calls.
-\item The bandwidth statistics from the statistics collector module of floodlight queries the links every 10 seconds.
+\item The inter-switch links have been assigned a total bandwidth of 50 Mbps each and the switch-hosts links have the default bandwidth of 100 Mbps as configured by GENI portal.
+\item As a default setting of the statistics collector module of Floodlight controller, the links are polled every 10 seconds for updated information. No settings of the module have been changed in this experiment.
 \item The different simple paths are only on an end-to-end basis for a pair of hosts. A simple path means that no node is repeated in a path between two hosts.
-\item A switch can only decide to change the path for a flow if the sender's IP is on the same subnet as the switch's interface.
-\item The active flows are decided by polling the switches every 10 seconds and comparing the last packets hit count with the new polled information.
-\item The application selects a different path based on aggregate available bandwidth from a list of simple paths between the source and the destination.
+\item A switch can only decide to change the shortest default path for a flow if the sender's IP is on the same subnet as the switch's interface.
+\item The active flows with priority `1' are decided by polling the switches every 10 seconds and comparing the last packets hit count with the new polled information.
+\item The application selects a different path based on aggregate available bandwidth from a list of unshared / unused simple paths between the source and the destination.
+\item The application tries to select the next available shortest path between the source and destination whose available bandwidth is greater or equal to atleast 95\% of another alternate longer path.
 \item The aggregate available bandwidth for a path is actually the minimum available link bandwidth on the set of inter-switch links on that path.
-\item The QoS rule written by the controller in the switches for a particular flow has an OpenFlow priority of `3' which makes sure that it receives precedence to any default shortest path rules for the same flow with priority `1'.
+\item If a better path is not available, the flow is kept on the shortest default path.
+\item The QoS rule written by the controller in the switches for a particular flow has an OpenFlow priority of `3' which makes sure that it receives precedence to any default shortest path rules for the same flow with priority `1'. Once a different path is selected for a flow, it is not changed again until the application quits.
 
 \end{itemize}
 
@@ -211,15 +215,21 @@ As described in section 4.3.2, the structure "switchHostsFlows" keeps track of t
 "curl -s http://<controllerIp>/wm/core/switch/<switchDPID>'/flow/json" 
 \end{center}
 }
-For each shortest default path flow rule returned, the application checks if the source IP is from the same subnet as an interface from the switch DPID being polled by comparing to the list of switch hosts in 'switchHostsFlows'. If determined to be the gateway switch for that flow, the new packet count is compared to the stored last known packet count to determine if the flow is active. If a flow is found active, the function to calculate bandwidth for all alternate paths is called.
+For each shortest default path flow rule returned, the application checks if the source IP is from the same subnet as an interface from the switch DPID being polled by comparing to the list of switch hosts in 'switchHostsFlows'. If determined to be the gateway switch for that flow, the new packet count is compared to the stored last known packet count to determine if the flow is active. If a shortest default path flow rule is found active, the function to calculate bandwidth for all alternate paths is called.
 
 \subsubsection{Calculate available bandwidth for alternate paths}
-The "calculate bandwidth for paths function" receives two arguments; a source and a target. The function calculates all simple paths between the source and the target using "all\_simple\_paths" method of the Python Networkx library. A simple path means that no node is repeated in a path between two hosts. If there is only one simple path returned, no alternate path is present between the two hosts i.e. only the shortest default path is available and the program returns to polling other active flows.
+The "calculate bandwidth for paths function" receives two arguments; a source and a target for an active flow on its default shortest path. The function calculates all simple paths between the source and the target using "all\_simple\_paths" method of the Python Networkx library. A simple path means that no node is repeated in a path between two hosts. If there is only one simple path returned, no alternate path is present between the two hosts i.e. only the shortest default path is available and the program returns to polling other active shortest default path flows.
 \\
 \\
 Using the information from the "interswitchLinks", the function uses the curl command from section 4.3.3 to get the transmission (TX) and reception bandwidth (RX) per switch per inter-switch port in bits per second. The TX and RX values are added to find the bandwidth usage in bits per second and then subtracted from the actual known link bandwidth to get available link bandwidth for each switch port and stored in a structure for using in path selection.
-\\
-\\
+\paragraph{Global QoS rules structure}
+In order to keep track of all the QoS flows of priority `3' added in the topology, a global list "QoSFlowsList" is maintained. This structure has 4 fields per rule entry; a source, a target, the complete path and the inter-switch links involved. This structure aids in the decision of selecting an unused / unshared path between different nodes in order to achieve maximum throughput when competing traffic is targeted from different sources to the same destination. The function also checks this list to ensure that a QoS flow for a source and destination pair does not already exist. The major functions of this list are:
+\begin{itemize}
+\item If the list is empty at the time application detects the very first active flow, the shortest default path is added as a QoS rule for that flow since all the links have the same available bandwidth. This path is stored in the global list so no other flow will be assigned this path.
+\item The second purpose is to check if a rule already exists in the global list for a flow so that there is no need to make further path changes for a flow.
+\item The third role of the list is to check for a given source-target, a reverse path "target-source" exists in the list. If yes, then the reverse path is added to the list and also sent to the rule generation function.
+\item The final purpose of this list is to find best possible unused or unshared inter-switch link paths for each incoming active flow based on length of path and aggregate available bandwidth.
+\end{itemize}
 For each simple path calculated for a source-target pair, the function decides which switches and inter-switch ports are involved on that path. Using the stored bandwidth statistics, it calculates the available bandwidth for each path by finding the minimum available bandwidth for a link involved in that path.
 \\
 \\
