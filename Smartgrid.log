@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.16 (TeX Live 2015) (preloaded format=pdflatex 2015.5.24)  1 APR 2016 12:12
+This is pdfTeX, Version 3.14159265-2.6-1.40.16 (TeX Live 2015) (preloaded format=pdflatex 2015.5.24)  5 APR 2016 19:37
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -686,65 +686,80 @@ LaTeX Font Info:    Font shape `U/futm/m/n' will be
 LaTeX Font Info:    Font shape `U/futm/m/n' will be
 (Font)              scaled to size 5.51999pt on input line 78.
  [1]
-Underfull \hbox (badness 10000) in paragraph at lines 81--88
+Underfull \hbox (badness 10000) in paragraph at lines 81--94
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 81--88
-
- []
-
-LaTeX Font Info:    Font shape `T1/futs/bx/sc' in size <14.4> not available
-(Font)              Font shape `T1/futs/b/sc' tried instead on input line 92.
-
-Underfull \hbox (badness 10000) in paragraph at lines 93--100
+Underfull \hbox (badness 10000) in paragraph at lines 81--94
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 93--100
+Underfull \hbox (badness 10000) in paragraph at lines 81--94
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 81--94
 
  []
 
 [2]
-Underfull \hbox (badness 10000) in paragraph at lines 105--112
+LaTeX Font Info:    Font shape `T1/futs/bx/sc' in size <14.4> not available
+(Font)              Font shape `T1/futs/b/sc' tried instead on input line 98.
+
+Underfull \hbox (badness 10000) in paragraph at lines 99--106
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 105--112
+Underfull \hbox (badness 10000) in paragraph at lines 99--106
 
  []
 
-[3] <topology.png, id=19, 771.88374pt x 553.06625pt>
+[3]
+Underfull \hbox (badness 10000) in paragraph at lines 111--118
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 111--118
+
+ []
+
+<topology.png, id=19, 771.88374pt x 553.06625pt>
 File: topology.png Graphic file (type png)
  <use topology.png>
-Package pdftex.def Info: topology.png used on input line 125.
+Package pdftex.def Info: topology.png used on input line 129.
 (pdftex.def)             Requested size: 308.74802pt x 221.22258pt.
 
-Underfull \hbox (badness 10000) in paragraph at lines 119--129
+Underfull \hbox (badness 10000) in paragraph at lines 123--133
 
  []
 
-<floodlight.png, id=21, 817.0525pt x 607.26875pt>
+[4] <floodlight.png, id=24, 817.0525pt x 607.26875pt>
 File: floodlight.png Graphic file (type png)
  <use floodlight.png>
-Package pdftex.def Info: floodlight.png used on input line 132.
+Package pdftex.def Info: floodlight.png used on input line 136.
 (pdftex.def)             Requested size: 367.67023pt x 273.26842pt.
- [4]
-<rules.png, id=25, 1258.7025pt x 375.4025pt>
+
+[5 <./topology.png>] <rules.png, id=29, 1258.7025pt x 375.4025pt>
 File: rules.png Graphic file (type png)
- <use rules.png>
-Package pdftex.def Info: rules.png used on input line 140.
+
+<use rules.png>
+Package pdftex.def Info: rules.png used on input line 144.
 (pdftex.def)             Requested size: 440.55247pt x 131.39284pt.
- [5 <./topology.png> <./floodlight.png>]
-Underfull \hbox (badness 10000) in paragraph at lines 146--150
+ <flowchart.png, id=30, 596.2275pt x 742.775pt>
+File: flowchart.png Graphic file (type png)
 
- []
-
-LaTeX Font Info:    Try loading font information for TS1+futs on input line 151
+<use flowchart.png>
+Package pdftex.def Info: flowchart.png used on input line 153.
+(pdftex.def)             Requested size: 387.54329pt x 482.79802pt.
+ [6 <./floodlight.png> <./rules.png>]
+LaTeX Font Info:    Try loading font information for TS1+futs on input line 162
 .
+
 (/usr/local/texlive/2015/texmf-dist/tex/latex/fourier/ts1futs.fd
 File: ts1futs.fd 2004/03/26 Fontinst v1.926 font definitions for TS1/futs.
 )
@@ -752,91 +767,128 @@ Package microtype Info: Loading generic settings for font family
 (microtype)             `futs' (encoding: TS1).
 (microtype)             For optimal results, create family-specific settings.
 (microtype)             See the microtype manual for details.
- [6 <./rules.png>]
-Underfull \hbox (badness 10000) in paragraph at lines 184--188
+ [7] [8 <./flowchart.png>]
+Underfull \hbox (badness 10000) in paragraph at lines 196--200
 
  []
 
-[7]
-Underfull \hbox (badness 10000) in paragraph at lines 190--194
+
+Underfull \hbox (badness 10000) in paragraph at lines 202--206
 
  []
 
-[8]
-Underfull \hbox (badness 10000) in paragraph at lines 221--225
-
- []
-
-[9]
+[9] [10]
 Underfull \hbox (badness 10000) in paragraph at lines 233--237
 
  []
 
-<flow.png, id=46, 1066.98625pt x 382.42876pt>
+[11]
+Underfull \hbox (badness 10000) in paragraph at lines 245--249
+
+ []
+
+<flow.png, id=54, 1066.98625pt x 382.42876pt>
 File: flow.png Graphic file (type png)
  <use flow.png>
-Package pdftex.def Info: flow.png used on input line 253.
+Package pdftex.def Info: flow.png used on input line 265.
 (pdftex.def)             Requested size: 480.13939pt x 172.09134pt.
 
-Overfull \hbox (32.00844pt too wide) in paragraph at lines 253--254
+Overfull \hbox (32.00844pt too wide) in paragraph at lines 265--266
  [] 
  []
 
-[10] <shortest.png, id=50, 771.88374pt x 553.06625pt>
+[12] <shortest.png, id=59, 771.88374pt x 553.06625pt>
 File: shortest.png Graphic file (type png)
  <use shortest.png>
-Package pdftex.def Info: shortest.png used on input line 262.
+Package pdftex.def Info: shortest.png used on input line 275.
 (pdftex.def)             Requested size: 347.34447pt x 248.8775pt.
 
-<h1-h3.png, id=51, 325.215pt x 334.24875pt>
+[13 <./flow.png>] <h1-h3.png, id=64, 325.215pt x 334.24875pt>
 File: h1-h3.png Graphic file (type png)
  <use h1-h3.png>
-Package pdftex.def Info: h1-h3.png used on input line 271.
+Package pdftex.def Info: h1-h3.png used on input line 284.
 (pdftex.def)             Requested size: 146.3454pt x 150.41054pt.
- [11 <./flow.png> <./shortest.png>] <h2-h3.png, id=57, 394.47375pt x 319.1925pt
->
+
+<h2-h3.png, id=65, 394.47375pt x 319.1925pt>
 File: h2-h3.png Graphic file (type png)
  <use h2-h3.png>
-Package pdftex.def Info: h2-h3.png used on input line 278.
+Package pdftex.def Info: h2-h3.png used on input line 291.
 (pdftex.def)             Requested size: 177.51154pt x 143.63528pt.
-
-<qos.png, id=58, 771.88374pt x 553.06625pt>
+ [14 <./shortest.png> <./h1-h3.png>] <qos.png, id=71, 771.88374pt x 553.06625pt
+>
 File: qos.png Graphic file (type png)
  <use qos.png>
-Package pdftex.def Info: qos.png used on input line 286.
+Package pdftex.def Info: qos.png used on input line 299.
 (pdftex.def)             Requested size: 347.34447pt x 248.8775pt.
- [12 <./h1-h3.png> <./h2-h3.png>] <h123WO.png, id=65, 747.79375pt x 346.29375pt
->
+
+<h123WO.png, id=72, 747.79375pt x 346.29375pt>
 File: h123WO.png Graphic file (type png)
  <use h123WO.png>
-Package pdftex.def Info: h123WO.png used on input line 295.
+Package pdftex.def Info: h123WO.png used on input line 308.
 (pdftex.def)             Requested size: 336.50407pt x 155.83073pt.
 
-<h123W.png, id=66, 746.79pt x 345.29pt>
+<h123W.png, id=73, 746.79pt x 345.29pt>
 File: h123W.png Graphic file (type png)
  <use h123W.png>
-Package pdftex.def Info: h123W.png used on input line 302.
+Package pdftex.def Info: h123W.png used on input line 315.
 (pdftex.def)             Requested size: 336.05238pt x 155.37904pt.
- [13 <./qos.png> <./h123WO.png>] [14 <./h123W.png>] (./Smartgrid.bbl
-Underfull \hbox (badness 10000) in paragraph at lines 318--1
+ [15 <./h2-h3.png> <./qos.png>] <shortesth4.png, id=79, 771.88374pt x 553.06625
+pt>
+File: shortesth4.png Graphic file (type png)
+
+<use shortesth4.png>
+Package pdftex.def Info: shortesth4.png used on input line 325.
+(pdftex.def)             Requested size: 347.34447pt x 248.8775pt.
+ [16 <./h123WO.png> <./h123W.png>]
+<h1-h4.png, id=85, 364.36125pt x 197.73875pt>
+File: h1-h4.png Graphic file (type png)
+ <use h1-h4.png>
+Package pdftex.def Info: h1-h4.png used on input line 334.
+(pdftex.def)             Requested size: 163.96104pt x 88.98161pt.
+
+<h2-h4.png, id=86, 355.3275pt x 194.7275pt>
+File: h2-h4.png Graphic file (type png)
+ <use h2-h4.png>
+Package pdftex.def Info: h2-h4.png used on input line 342.
+(pdftex.def)             Requested size: 159.89589pt x 87.62656pt.
+ [17 <./shortesth4.png> <./h1-h4.png>] <qosh4.png, id=92, 771.88374pt x 553.066
+25pt>
+File: qosh4.png Graphic file (type png)
+
+<use qosh4.png>
+Package pdftex.def Info: qosh4.png used on input line 351.
+(pdftex.def)             Requested size: 347.34447pt x 248.8775pt.
+ <h124WO.png, id=93, 745.78625pt x 343.2825pt>
+File: h124WO.png Graphic file (type png)
+ <use h124WO.png>
+Package pdftex.def Info: h124WO.png used on input line 360.
+(pdftex.def)             Requested size: 335.60071pt x 154.4757pt.
+
+<h124W.png, id=94, 745.78625pt x 345.29pt>
+File: h124W.png Graphic file (type png)
+ <use h124W.png>
+Package pdftex.def Info: h124W.png used on input line 367.
+(pdftex.def)             Requested size: 335.60071pt x 155.37904pt.
+ [18 <./h2-h4.png> <./qosh4.png>] [19 <./h124WO.png> <./h124W.png>] [20]
+Underfull \hbox (badness 10000) in paragraph at lines 393--397
 
  []
 
-[15]
+(./Smartgrid.bbl [21]
 Underfull \hbox (badness 10000) in paragraph at lines 44--46
 []\T1/futs/m/n/12 (+20) R. Izard, ``How to col-lect switch statis-tics (and com
 -pute band-width).''
  []
 
-) [16] (./Smartgrid.aux) ) 
+) [22] (./Smartgrid.aux) ) 
 Here is how much of TeX's memory you used:
- 7453 strings out of 493089
- 115663 string characters out of 6134842
- 257143 words of memory out of 5000000
- 10525 multiletter control sequences out of 15000+600000
- 135096 words of font info for 265 fonts, out of 8000000 for 9000
+ 7499 strings out of 493089
+ 116252 string characters out of 6134842
+ 258264 words of memory out of 5000000
+ 10560 multiletter control sequences out of 15000+600000
+ 135366 words of font info for 268 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 47i,12n,47p,847b,485s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 47i,12n,47p,984b,485s stack positions out of 5000i,500n,10000p,200000b,80000s
 {/usr/local/texlive/2015/texmf-dist/fonts/enc/dvips/b
 ase/8r.enc}{/usr/local/texlive/2015/texmf-dist/fonts/enc/dvips/cm-super/cm-supe
 r-t1.enc}</usr/local/texlive/2015/texmf-dist/fonts/type1/adobe/utopia/putb8a.pf
@@ -844,10 +896,10 @@ b></usr/local/texlive/2015/texmf-dist/fonts/type1/adobe/utopia/putr8a.pfb></usr
 /local/texlive/2015/texmf-dist/fonts/type1/adobe/utopia/putri8a.pfb></usr/local
 /texlive/2015/texmf-dist/fonts/type1/public/cm-super/sfsx1200.pfb></usr/local/t
 exlive/2015/texmf-dist/fonts/type1/public/cm-super/sftt1095.pfb>
-Output written on Smartgrid.pdf (17 pages, 531384 bytes).
+Output written on Smartgrid.pdf (23 pages, 735136 bytes).
 PDF statistics:
- 102 PDF objects out of 1000 (max. 8388607)
- 57 compressed objects within 1 object stream
+ 135 PDF objects out of 1000 (max. 8388607)
+ 70 compressed objects within 1 object stream
  0 named destinations out of 1000 (max. 500000)
- 33843 words of extra memory for PDF output out of 35830 (max. 10000000)
+ 33878 words of extra memory for PDF output out of 35830 (max. 10000000)
 

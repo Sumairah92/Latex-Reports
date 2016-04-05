@@ -5,68 +5,87 @@
 \@writefile{lot}{\select@language{english}}
 \citation{thesis}
 \citation{multipath}
+\citation{thesis}
+\@writefile{toc}{\contentsline {section}{\numberline {1}Introduction}{2}}
 \citation{bigswitch}
 \citation{scheduler}
 \citation{convergence}
-\@writefile{toc}{\contentsline {section}{\numberline {1}Introduction}{2}}
-\@writefile{toc}{\contentsline {section}{\numberline {2}Related work for implementing QoS in sdn}{2}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {2.1}Rate limiting and traffic shaping}{2}}
 \citation{bigswitch}
 \citation{multipath}
+\@writefile{toc}{\contentsline {section}{\numberline {2}Related work for implementing QoS in sdn}{3}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.1}Rate limiting and traffic shaping}{3}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.2}Differentiated Services Code Point (DSCP)}{3}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.3}Multipath routing}{3}}
 \citation{openqos}
 \citation{video}
 \citation{thesis}
-\@writefile{toc}{\contentsline {subsection}{\numberline {2.2}Differentiated Services Code Point (DSCP)}{3}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {2.3}Multipath routing}{3}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {2.4}Dynamic routing of specific flows}{3}}
-\@writefile{toc}{\contentsline {section}{\numberline {3}Motivation for the project}{4}}
-\@writefile{toc}{\contentsline {section}{\numberline {4}Project description}{4}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.1}Experiment Setup}{4}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.2}The network topology and the controller}{4}}
-\@writefile{lof}{\contentsline {figure}{\numberline {4.1}{\ignorespaces GENI topology}}{5}}
-\newlabel{Fig 4.1}{{4.1}{5}}
-\@writefile{lof}{\contentsline {figure}{\numberline {4.2}{\ignorespaces Floodlight dashboard}}{5}}
-\newlabel{Fig 4.2}{{4.2}{5}}
-\@writefile{lof}{\contentsline {figure}{\numberline {4.3}{\ignorespaces Rule table in OpenFlow switch}}{6}}
-\newlabel{Fig 4.3}{{4.3}{6}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.3}Flow of the application}{6}}
-\@writefile{toc}{\contentsline {subsubsection}{\numberline {4.3.1}Constructing the topology}{7}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.4}Dynamic routing of specific flows}{4}}
+\@writefile{toc}{\contentsline {section}{\numberline {3}Project Design}{4}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.1}Experiment Setup}{4}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.2}The network topology}{5}}
+\@writefile{lof}{\contentsline {figure}{\numberline {3.1}{\ignorespaces GENI topology}}{5}}
+\newlabel{Fig 3.1}{{3.1}{5}}
+\@writefile{lof}{\contentsline {figure}{\numberline {3.2}{\ignorespaces Floodlight dashboard}}{6}}
+\newlabel{Fig 3.2}{{3.2}{6}}
+\@writefile{lof}{\contentsline {figure}{\numberline {3.3}{\ignorespaces Rule table in OpenFlow switch}}{6}}
+\newlabel{Fig 3.3}{{3.3}{6}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.3}Control Flow}{6}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.4}Design Decisions}{7}}
+\@writefile{lof}{\contentsline {figure}{\numberline {3.4}{\ignorespaces Control Flow of the application}}{8}}
+\newlabel{Flow}{{3.4}{8}}
+\@writefile{toc}{\contentsline {section}{\numberline {4}Project Implementation}{9}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.1}Constructing the topology}{9}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.2}Identifying hosts connected to the switches}{9}}
 \citation{stats}
-\@writefile{toc}{\contentsline {subsubsection}{\numberline {4.3.2}Identifying hosts connected to the switches}{8}}
-\@writefile{toc}{\contentsline {subsubsection}{\numberline {4.3.3}Enabling statistics collection}{8}}
-\@writefile{toc}{\contentsline {subsubsection}{\numberline {4.3.4}Identifying inter-switch links}{8}}
-\@writefile{toc}{\contentsline {subsubsection}{\numberline {4.3.5}Determine active flows}{9}}
-\@writefile{toc}{\contentsline {subsubsection}{\numberline {4.3.6}Calculate available bandwidth for alternate paths}{9}}
-\@writefile{toc}{\contentsline {paragraph}{\nonumberline Global QoS rules structure}{9}}
-\@writefile{toc}{\contentsline {subsubsection}{\numberline {4.3.7}Generate rule for path}{10}}
-\@writefile{lof}{\contentsline {figure}{\numberline {4.4}{\ignorespaces A sample flow}}{11}}
-\newlabel{Fig 4.4}{{4.4}{11}}
-\@writefile{toc}{\contentsline {section}{\numberline {5}Results (Preliminary)}{11}}
-\@writefile{lof}{\contentsline {figure}{\numberline {5.1}{\ignorespaces Shortest paths from h1,h2 to h3}}{11}}
-\newlabel{Fig 5.1}{{5.1}{11}}
-\@writefile{lof}{\contentsline {figure}{\numberline {5.2}{\ignorespaces Application output for QoS Flow from h1-h3 and h3-h1}}{12}}
-\newlabel{Fig 5.2}{{5.2}{12}}
-\@writefile{lof}{\contentsline {figure}{\numberline {5.3}{\ignorespaces Application output for QoS Flow from h2-h3 and h3-h2}}{12}}
-\newlabel{Fig 5.3}{{5.3}{12}}
-\@writefile{lof}{\contentsline {figure}{\numberline {5.4}{\ignorespaces New QoS paths from h1,h2 to h3}}{13}}
-\newlabel{Fig 5.4}{{5.4}{13}}
-\@writefile{lof}{\contentsline {figure}{\numberline {5.5}{\ignorespaces Iperf results from h1,h2 to h3 without application}}{13}}
-\newlabel{Fig 5.5}{{5.5}{13}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.3}Enabling statistics collection}{10}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.4}Identifying inter-switch links}{10}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.5}Determine active flows}{10}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.6}Calculate available bandwidth for alternate paths}{11}}
+\@writefile{toc}{\contentsline {paragraph}{\nonumberline Global QoS rules structure}{11}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.7}Generate rule for path}{12}}
+\@writefile{lof}{\contentsline {figure}{\numberline {4.1}{\ignorespaces A sample flow}}{13}}
+\newlabel{Fig 4.1}{{4.1}{13}}
+\@writefile{toc}{\contentsline {section}{\numberline {5}Results}{13}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.1}Traffic from host 1 and host 2 to host 3}{13}}
+\@writefile{lof}{\contentsline {figure}{\numberline {5.1}{\ignorespaces Shortest paths from h1,h2 to h3}}{14}}
+\newlabel{Shorth3}{{5.1}{14}}
+\@writefile{lof}{\contentsline {figure}{\numberline {5.2}{\ignorespaces Application output for QoS Flow from h1-h3 and h3-h1}}{14}}
+\newlabel{Outh1h3}{{5.2}{14}}
+\@writefile{lof}{\contentsline {figure}{\numberline {5.3}{\ignorespaces Application output for QoS Flow from h2-h3 and h3-h2}}{15}}
+\newlabel{Outh2h3}{{5.3}{15}}
+\@writefile{lof}{\contentsline {figure}{\numberline {5.4}{\ignorespaces New QoS paths from h1,h2 to h3}}{15}}
+\newlabel{Qosh3}{{5.4}{15}}
+\@writefile{lof}{\contentsline {figure}{\numberline {5.5}{\ignorespaces Iperf results from h1,h2 to h3 without application}}{16}}
+\newlabel{h123WO}{{5.5}{16}}
+\@writefile{lof}{\contentsline {figure}{\numberline {5.6}{\ignorespaces Iperf results from h1,h2 to h3 with application}}{16}}
+\newlabel{h123W}{{5.6}{16}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.2}Traffic from host 1 and host 2 to host 4}{16}}
+\@writefile{lof}{\contentsline {figure}{\numberline {5.7}{\ignorespaces Shortest paths from h1,h2 to h4}}{17}}
+\newlabel{Shorth4}{{5.7}{17}}
+\@writefile{lof}{\contentsline {figure}{\numberline {5.8}{\ignorespaces Application output for QoS Flow from h1-h4 and h4-h1}}{17}}
+\newlabel{Outh1h4}{{5.8}{17}}
+\@writefile{lof}{\contentsline {figure}{\numberline {5.9}{\ignorespaces Application output for QoS Flow from h2-h4 and h4-h2}}{18}}
+\newlabel{Outh2h4}{{5.9}{18}}
+\@writefile{lof}{\contentsline {figure}{\numberline {5.10}{\ignorespaces New QoS paths from h1,h2 to h4}}{18}}
+\newlabel{Qosh4}{{5.10}{18}}
+\@writefile{lof}{\contentsline {figure}{\numberline {5.11}{\ignorespaces Iperf results from h1,h2 to h4 without application}}{19}}
+\newlabel{h124WO}{{5.11}{19}}
+\@writefile{lof}{\contentsline {figure}{\numberline {5.12}{\ignorespaces Iperf results from h1,h2 to h4 with application}}{19}}
+\newlabel{h124W}{{5.12}{19}}
+\@writefile{toc}{\contentsline {section}{\numberline {6}Challenges}{19}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.1}Default L2 learning switch:}{19}}
 \citation{stats}
-\@writefile{lof}{\contentsline {figure}{\numberline {5.6}{\ignorespaces Iperf results from h1,h2 to h3 with application}}{14}}
-\newlabel{Fig 5.6}{{5.6}{14}}
-\@writefile{toc}{\contentsline {section}{\numberline {6}Challenges}{14}}
-\@writefile{toc}{\contentsline {paragraph}{\nonumberline Floodlight default l2 learning switch:}{14}}
-\@writefile{toc}{\contentsline {paragraph}{\nonumberline Bandwidth design decision}{14}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.2}Bandwidth design decision}{20}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.3}Dynamic path changing:}{20}}
+\@writefile{toc}{\contentsline {section}{\numberline {7}Learning Outcomes}{20}}
 \bibstyle{ieeetr}
 \bibdata{Smartgrid}
 \bibcite{thesis}{1}
 \bibcite{multipath}{2}
 \bibcite{bigswitch}{3}
 \bibcite{scheduler}{4}
-\@writefile{toc}{\contentsline {paragraph}{\nonumberline Dynamic path changing:}{15}}
-\@writefile{toc}{\contentsline {section}{\numberline {7}Conclusion}{15}}
 \bibcite{convergence}{5}
 \bibcite{openqos}{6}
+\@writefile{toc}{\contentsline {section}{\numberline {8}Conclusion}{21}}
 \bibcite{video}{7}
 \bibcite{stats}{8}

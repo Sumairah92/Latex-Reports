@@ -49,7 +49,7 @@
 		\usefont{OT1}{bch}{b}{n}
 		\normalfont \normalsize \textsc{\textbf{Department of Computer Science | University of Kentucky}} \\ [28pt]
 		\horrule{0.5pt} \\[0.4cm]
-		\huge Quality of Service in Software Defined Networks\\
+		\huge Development of a Floodlight Application for Improving the Performance of GENI Experiments\\
 		\horrule{2pt} \\[0.5cm]
 		\normalfont \normalsize \textsc{\textbf{Masters project report}}
 }
@@ -78,13 +78,19 @@
 \newpage
 
 \section{Introduction}
-This project focuses on research and proof of concept about how OpenFlow and Software Defined Networks can be used to provide Quality of Service. The main goal of Software defined networks is to help create a smarter network then we have today. The concept of splitting the control plane and the data plane and increasing programmability of the network by taking the intelligence to a central controller allows us to make our networking entities more application aware. The advantages of a smarter network are better utilization of network resources, adaptability, lower cost and better services.
+The increasing advent of real time applications also bring the need of demanding Quality of Service guarantees and it is essential that the network protocols have the capability of meeting these requirements. The traditional networking is based on the best-effort principle and does not provide specific bandwidth, packet loss or latency guarantees for any application. Some efforts of traditional QoS architectures like DiffServ or IntServ require significant changes to the network design while Multiprotocol Label Switching (MPLS) lacks in ease of reconfiguration and adaptivity \cite{thesis}. The quality of service evaluation of a network is to make certain that the application receives its due set of connection parameters according to the QoS requirements of that application. The parameters can be throughput, End to end delay, Jitter (deviation from average end-to-end delay) and number of packets lost or damaged in the channel \cite{multipath}. 
 \\
 \\
-The decoupling of the control plane and data plane allows a high degree of control over flows that pass through the switches via intelligent controller applications. The increasing advent of real time applications also bring with them the need of demanding Quality of Service guarantees and the network protocols need to have the capability of meeting these requirements \cite{thesis}. The quality of service evaluation of a network is to make certain that the application receives its due set of connection parameters according to the QoS requirements of that application. The parameters can be throughput, End to end delay, Jitter (deviation from average end-to-end delay) and number of packets lost or damaged in the channel \cite{multipath}. 
+The main goal of Software defined networks is to help create a smarter network then we have today. The concept of splitting the control plane and the data plane and increasing programmability of the network by taking the intelligence to a central controller allows us to make our networking entities more application aware.The advantages of a smarter network are better utilization of network resources, adaptability, lower cost and better services. Protocols such as OpenFlow can be used to establish this communication between the split control plane and the data plane and control the behavior of the entire network. The logically centralized control can help in defining distinct and complex network functions like load balancing and security based on the nature of the traffic or application \cite{thesis}. 
 \\
 \\
-We need to utilize OpenFlow protocol in SDN for providing dynamic QoS guarantees for different classes of flows with different service requirements by making dynamic routing decisions or efficient priority queuing. 
+The decoupling of the control plane and data plane allows a high degree of control over flows that pass through the switches via intelligent controller applications using the northbound APIs for the controller. These applications can be leveraged for providing dynamic QoS guarantees for different classes of flows with different service requirements by making dynamic routing decisions or efficient priority queuing which is not possible in the traditional networks. For example flows belonging to an application with high QoS requirements can be diverted to a path with better bandwidth and less latency. Similarly, a flow belonging to a time-sensitive application can be placed in a priority queue of the OpenFlow switch.
+\\
+\\
+This project focuses on research about how OpenFlow and Software Defined Networks can be used to provide Quality of Service. The project aims for setting up a GENI portal experiment for implementing dynamic Quality of Service thereby improving the network performance. The project serves to be a proof of concept on how the behavior of individual network flows can be changed from the default shortest forwarding path in a GENI SDN experiment through Northbound API applications running on top of the SDN controller.
+\\
+\\
+This report is organized as follows. Section 2 presents the literature review on related work for implementing QoS in software defined networks and summarizes the various techniques that are used. Section 3 presents a high level view of the experiment design and setup while Section 4 investigates in detail the implementation of the developed application. Section 5 demonstrates the experiment results and Section 6 discusses some of the challenges of the experiment. Section 7 and 8 describe the learning outcomes for this Master's project and conclude this report.
 
 \section{Related work for implementing QoS in sdn}
 This report summarizes the techniques that were researched for literature review on the project.
@@ -93,7 +99,7 @@ This report summarizes the techniques that were researched for literature review
 The rate limiting or traffic shaping technique is achieved by bandwidth control among the OVS ports for rate limiting. Standard OpenFlow protocol specifications like "enqueue" can be used for queuing traffic based on inspection of flows by the SDN controller in order to assign different queuing QoS policies for different flows. The queues inside OVS itself are configured by an administrator of OpenFlow versions less than 3.0 while versions 3.0 and above introduce "OF-Config" that will make this process much easier \cite{bigswitch}. 
 \\
 \\
-Since only bandwidth guaratees and FIFO scheduling is not enough to provide QoS guarantees in SDN, using multiple packet schedulers of Linux kernel e.g., Hierarchical Token Bucket, Randonly Early detection and Stochastic Fairness queuing can be utilized to overcome packet scheduling issues. The strong traffic control system of Linux can be used to provide traffic shaping, queuing and congestion avoidance. This approach would require data path extensions for OpenFlow for kernel space queues \cite{scheduler}
+Since only bandwidth guaratees and FIFO scheduling is not enough to provide QoS guarantees in SDN, using multiple packet schedulers of Linux kernel e.g., Hierarchical Token Bucket, Randonly Early detection and Stochastic Fairness queuing can be utilized to overcome packet scheduling issues. The strong traffic control system of Linux can be used to provide traffic shaping, queuing and congestion avoidance. This approach would require data path extensions for OpenFlow for kernel space queues \cite{scheduler}.
 \\
 \\
 Some QoS extensions to OpenFlow have been developed in \cite{convergence} that have the capability of taking in high level QoS requirements of applications and automatically modify the QoS parameters on network devices in the form of rate limiters and dynamic priority assignment. This controller removes the need of manually configuring QoS requirements for each device in the network and centrally controls these configurations. 
@@ -110,42 +116,47 @@ Another approach for dynamic routing is by using two level QoS flows for multime
 \\
 Another technique in \cite{thesis} tries to find an optimal path between two end points with the minimum cost (that does not increase the capacity of any link) after ruling out the links that break specified QoS constraints.(i-e delay and packet loss do not increase a threshold).The architecture dynamically updates the network parameters to become aware of the status of the network and calculate the best route according to the QoS specified policies. The model is based on "multi-commodity flow constrained shortest path problem (MCFSP)" .
 
-\section{Motivation for the project}
-The project aims for setting up an experiment for implementing dynamic Quality of Service in software defined networks using GENI portal as the platform. The project serves to be a proof of concept on how the behavior of individual network flows can be changed from the default shortest forwarding path through Northbound API applications running on top of the SDN controller.
-\section{Project description}
+\section{Project Design}
 \subsection{Experiment Setup}
 The experiment is set up in GENI portal using Xen virtual machines as hosts and Open vSwitch nodes as virtual switches between them. The switches are configured with default shortest path routing rules for each of the hosts using an SDN controller. The SDN controller used is Floodlight open source controller which exposes a REST API for the northbound applications to use. The northbound QoS application for the experiment is developed in Python. It uses python packages like Networkx and untangle in order to construct the topology using the information provided by the controller REST API and RSpec document provided by the GENI portal. 
-\subsection{The network topology and the controller}
-The topology constructed in GENI portal is shown in Figure \ref{Fig 4.1}. The topology is not linear and has multiple paths between a pair of hosts in order to have alternate paths for routing flows based on bandwidth. The nodes labeled as switches run Openvswitch on them configured to use an OVS bridge to connect to the hosts and other OVS nodes.
+\subsection{The network topology}
+The topology constructed in GENI portal is shown in Figure \ref{Fig 3.1}. The topology is not linear and has multiple paths between a pair of hosts in order to have alternate paths for routing flows based on bandwidth. The nodes labeled as switches run Openvswitch on them configured to use an OVS bridge to connect to the hosts and other OVS nodes.
 \\
 \\
-Each of the OpenFlow switches (OVS) have a Datapath id (DPID) associated with them which is used by the SDN controller to identify and control the switches. Using the web interface of the Floodlight controller, we can see the switches connected to the controller and the various information statistics related to them in Figure \ref{Fig 4.2}.
+Each of the OpenFlow switches (OVS) have a Datapath id (DPID) associated with them which is used by the SDN controller to identify and control the switches. Using the web interface of the Floodlight controller, we can see the switches connected to the controller and the various information statistics related to them in Figure \ref{Fig 3.2}.
 \begin{figure}[H]
 \begin{center}
 \includegraphics[scale=0.4]{topology.png}   
 \end{center}
  \caption{GENI topology}
- \label{Fig 4.1}
+ \label{Fig 3.1}
 \end{figure}
 \begin{figure}[H]
 \begin{center}
 \includegraphics[scale=0.45]{floodlight.png}   
 \end{center}
  \caption{Floodlight dashboard}
- \label{Fig 4.2}
+ \label{Fig 3.2}
 \end{figure}
-We can also see the OpenFlow rules that a switch is configured with in Figure \ref{Fig 4.3}. Right now, the rules shown are default shortest path rules with OpenFlow priority `1' that the floodlight controller pushed into the switches using the static flow pusher REST API.
+We can also see the OpenFlow rules that a switch is configured with in Figure \ref{Fig 3.3}. Right now, the rules shown are default shortest path rules with OpenFlow priority `1' that the floodlight controller pushed into the switches using the static flow pusher REST API.
 \begin{figure}[H]
 \begin{center}
 \includegraphics[scale=0.35]{rules.png}   
 \end{center}
  \caption{Rule table in OpenFlow switch}
- \label{Fig 4.3}
+ \label{Fig 3.3}
 \end{figure}
-\subsection{Flow of the application}
-The control flow of the application starts from constructing the network graph, polling the OpenFlow switches using the floodlight REST API to find active flows and then uses the statistics collector module of floodlight to query link statistics. Based on the statistics received, the application chooses a different path for each active flow based on available link bandwidth.
-\\
-\\
+\subsection{Control Flow}
+The control flow of the application starts from constructing the network graph, polling the OpenFlow switches using the floodlight REST API to find active flows and then uses the statistics collector module of floodlight to query link statistics. Based on the statistics received, the application chooses a different path for an active flow based on available link bandwidth and available paths. The application control flow is shown in Figure \ref{Flow}.
+\begin{figure}
+\begin{center}
+\includegraphics[scale=0.65]{flowchart.png}   
+\end{center}
+ \caption{Control Flow of the application}
+ \label{Flow}
+\end{figure}
+
+\subsection{Design Decisions}
 The design decisions taken are the following:
 \begin{itemize}
 \item The topology is constructed using Python Networkx library undirected graph. The information for the nodes and the edges is received from the GENI RSpec document as well as the Floodlight controller REST API calls.
@@ -161,8 +172,9 @@ The design decisions taken are the following:
 \item The QoS rule written by the controller in the switches for a particular flow has an OpenFlow priority of `3' which makes sure that it receives precedence to any default shortest path rules for the same flow with priority `1'. Once a different path is selected for a flow, it is not changed again until the application quits.
 
 \end{itemize}
-
-\subsubsection{Constructing the topology}
+\section{Project Implementation}
+This section goes over the steps of the developed application summarized in Figure \ref{Flow} in detail.
+\subsection{Constructing the topology}
 The application reads in the RSpec XML document from GENI portal and parses information about the names and interfaces of the nodes. The Python library used for parsing is "untangle" which converts XML to python objects. The node data items consist of the IP address, MAC address and port number for each of the interfaces connected to that node. The application then queries the controller using REST API commands to get respective OpenFlow Datapath ids (DPIDs) for the switches in the topology. Following command is used to get the DPID list from the controller:
 \textit{
 \begin{center}
@@ -186,13 +198,13 @@ For constructing the network graph after parsing the RSpec and querying the cont
 \\
 Since the RSpec document or the controller do not provide information about the neighbors of the nodes or which interface is connected to which neighbor, the inter-host links are identified by matching the respective IP addresses in order to construct the edges between the nodes for the graph.
 
-\subsubsection{Identifying hosts connected to the switches}
+\subsection{Identifying hosts connected to the switches}
 As mentioned in the design decisions, A switch can only decide to change the path for a flow if the sender's IP is on the same subnet as the switch's interface. To implement this, a structure 'switchHostsFlows' is constructed which specifies which hosts are on the switch subnet and which are the interfaces that connect to another switch instead of a host. It also specifies the possible source and destination pairs of a switch's traffic after polling all the shortest path flows in the OpenFlow table of that switch. This structure also maintains the flow statistics for each pair of source and destination hosts in the form of the last packet count. This information is later used to determine active flows in the network.
 \\
 \\
 The hosts connected to the switch are identified by comparing the network address of interfaces of the hosts to the /24 network prefix of the interfaces of the particular switch. This structure only references the nodes which play the role of "hosts" on the network and not the ones which play the role of "switches".
 
-\subsubsection{Enabling statistics collection}
+\subsection{Enabling statistics collection}
 In order to take advantage of the Floodlight controller statistics module REST API, it needs to be enabled in all the OpenFlow switches in the network. The command used to enable the statistics collection in the application is:
 \textit{
 \begin{center}
@@ -206,9 +218,9 @@ After statistics are enabled in the switches, the application can query the cont
 \end{center}
 }
 The reply to the above command returns the transmission and reception bandwidth per switch per port in bits per second. The default interval when the bandwidth is reassessed by the controller is every 10 seconds \cite{stats}.
-\subsubsection{Identifying inter-switch links}
+\subsection{Identifying inter-switch links}
 The application also creates a list of links between the switches and the respective output switch ports for those links called the "interswitchLinks". This is important because the bandwidth calculation for paths is done solely on the basis of available bandwidth on the switch-switch links and not the switch-host links.
-\subsubsection{Determine active flows}
+\subsection{Determine active flows}
 As described in section 4.3.2, the structure "switchHostsFlows" keeps track of the last known packet count for a particular flow from a host to a destination. The application queries the controller to poll the switches for a list of flow statistics every 10 seconds using the command:
 \textit{
 \begin{center}
@@ -217,7 +229,7 @@ As described in section 4.3.2, the structure "switchHostsFlows" keeps track of t
 }
 For each shortest default path flow rule returned, the application checks if the source IP is from the same subnet as an interface from the switch DPID being polled by comparing to the list of switch hosts in 'switchHostsFlows'. If determined to be the gateway switch for that flow, the new packet count is compared to the stored last known packet count to determine if the flow is active. If a shortest default path flow rule is found active, the function to calculate bandwidth for all alternate paths is called.
 
-\subsubsection{Calculate available bandwidth for alternate paths}
+\subsection{Calculate available bandwidth for alternate paths}
 The "calculate bandwidth for paths function" receives two arguments; a source and a target for an active flow on its default shortest path. The function calculates all simple paths between the source and the target using "all\_simple\_paths" method of the Python Networkx library. A simple path means that no node is repeated in a path between two hosts. If there is only one simple path returned, no alternate path is present between the two hosts i.e. only the shortest default path is available and the program returns to polling other active shortest default path flows.
 \\
 \\
@@ -235,14 +247,14 @@ For each simple path calculated for a source-target pair, the function decides w
 \\
 After calculating available bandwidths on all paths, the function checks if the paths are valid unused or unshared paths by checking the global QoS flows list. Then the function checks if any of the bandwidth values of the valid paths are better than the default shortest path. If yes, then it chooses the next shortest path with the best available value, adds it to QoS flows list and returns the path. If not, then the function returns none since there is no path available that will guarantee good bandwidth without compromising other competing traffic and the flow remains on shortest path.
 
-\subsubsection{Generate rule for path}
+\subsection{Generate rule for path}
 The "generate rule for path" function is called if the "calculate bandwidth for paths function" returns an alternate path for a pair of hosts. The function takes in three arguments; a path which is returned by the bandwidth function, a source IP and a destination IP. The function first checks the OpenFlow rule table of the switches involved in that path for a match of a priority `3' rule for the same source and destination IP using the following command.
 \textit{
 \begin{center}
 "curl -s http://<controllerIp>/wm/staticflowpusher/list/<switchDPID>/json" 
 \end{center}
 }
-If a rule already exists, the function returns and does not generate a new priority `3' rule. If no rule exists, the function determines the node and the next hop interface for each node in the path, finds the MAC address and switch port for forwarding and constructs a flow rule in JSON format to send via the static flow pusher REST API of Floodlight controller. A sample flow rule is shown in Figure \ref{Fig 4.4}. The command used by the application to push a generated flow through the controller to the switch is:
+If a rule already exists, the function returns and does not generate a new priority `3' rule. If no rule exists, the function determines the node and the next hop interface for each node in the path, finds the MAC address and switch port for forwarding and constructs a flow rule in JSON format to send via the static flow pusher REST API of Floodlight controller. A sample flow rule is shown in Figure \ref{Fig 4.1}. The command used by the application to push a generated flow through the controller to the switch is:
 \textit{
 \begin{center}
 "curl -X POST -d `"+<JSON\_rule>+"' http://<controllerIp>/wm/staticflowpusher/json" 
@@ -253,72 +265,136 @@ If a rule already exists, the function returns and does not generate a new prior
 \includegraphics[scale=0.45]{flow.png}   
 \end{center}
  \caption{A sample flow}
- \label{Fig 4.4}
+ \label{Fig 4.1}
 \end{figure}
-\section{Results (Preliminary)}
-To test the effectiveness of the applicaton, we need to test throughput achieved with competing traffic with and without the application running. We will test this by sending traffic from host 1 (h1) to host 3 (h3) and host 2 (h2) to host 3 (h3) at the same time. Figure \ref{Fig 5.1} shows the shortest path setup from h1-h3 and h2-h3 without the application running.
+\section{Results}
+\subsection{Traffic from host 1 and host 2 to host 3}
+To test the effectiveness of the applicaton, we need to test throughput achieved with competing traffic with and without the application running. We will test this by sending traffic from host 1 (h1) to host 3 (h3) and host 2 (h2) to host 3 (h3) at the same time. Figure \ref{Shorth3} shows the shortest path setup from h1-h3 and h2-h3 without the application running.
 \begin{figure}[H]
 \begin{center}
 \includegraphics[scale=0.45]{shortest.png}   
 \end{center}
  \caption{Shortest paths from h1,h2 to h3}
- \label{Fig 5.1}
+ \label{Shorth3}
 \end{figure}
 
-After running the application, we run "iperf" from h1 to h3 and since this is the first active flow, the shortest path is added as a QoS flow for h1-h3 and also a reverse path for h3-h1 as shown in Figure \ref{Fig 5.2}. Next, we run "iperf"  from h2 to h3. The application discovers the active flow, queries for link bandwidth and chooses the next shortest and unused path with the better bandwidth for h2-h3 as shown in Figure \ref{Fig 5.3}.
+After running the application, we run "iperf" from h1 to h3 and since this is the first active flow, the shortest path is added as a QoS flow for h1-h3 and also a reverse path for h3-h1 as shown in Figure \ref{Outh1h3}. Next, we run "iperf"  from h2 to h3. The application discovers the active flow, queries for link bandwidth and chooses the next shortest and unused path with the better bandwidth for h2-h3 as shown in Figure \ref{Outh2h3}.
 \begin{figure}[H]
 \begin{center}
 \includegraphics[scale=0.45]{h1-h3.png}   
 \end{center}
  \caption{Application output for QoS Flow from h1-h3 and h3-h1}
- \label{Fig 5.2}
+ \label{Outh1h3}
 \end{figure}
 \begin{figure}[H]
 \begin{center}
 \includegraphics[scale=0.45]{h2-h3.png}   
 \end{center}
  \caption{Application output for QoS Flow from h2-h3 and h3-h2}
- \label{Fig 5.3}
+ \label{Outh2h3}
 \end{figure}
-Figure \ref{Fig 5.4} shows the final set up for the paths for h1-h3 and h2-h3 with the application running.
+Figure \ref{Qosh3} shows the final set up for the paths for h1-h3 and h2-h3 with the application running.
 \begin{figure}[H]
 \begin{center}
 \includegraphics[scale=0.45]{qos.png}   
 \end{center}
  \caption{New QoS paths from h1,h2 to h3}
- \label{Fig 5.4}
+ \label{Qosh3}
 \end{figure}
 
-To test the throughput, we will "iperf" from h1-h3 and h2-h3 at the same time. The maximum link bandwidth that can be achieved is 50 Mbps. Figure \ref{Fig 5.5} shows the results achieved without the QoS application running and Figure \ref{Fig 5.6} shows the results achieved with the QoS application running using the paths shows in \ref{Fig 5.4}. 
+To test the throughput, we will "iperf" from h1-h3 and h2-h3 at the same time. The maximum link bandwidth that can be achieved is 50 Mbps. Figure \ref{h123WO} shows the results achieved without the QoS application running and Figure \ref{h123W} shows the results achieved with the QoS application running using the paths shows in \ref{Qosh3}. 
 \begin{figure}[H]
 \begin{center}
 \includegraphics[scale=0.45]{h123WO.png}   
 \end{center}
  \caption{Iperf results from h1,h2 to h3 without application}
- \label{Fig 5.5}
+ \label{h123WO}
 \end{figure}
 \begin{figure}[H]
 \begin{center}
 \includegraphics[scale=0.45]{h123W.png}   
 \end{center}
  \caption{Iperf results from h1,h2 to h3 with application}
- \label{Fig 5.6}
+ \label{h123W}
 \end{figure}
 It is clear that the QoS application paths achieve near link bandwidth in case of competing traffic targeted at the same destination.
+\subsection{Traffic from host 1 and host 2 to host 4}
+Similarly, we test the throughtput achieved when we send traffic from host 1 (h1) and host 2 (h2) to host 4 (h4) at the same time. At this time, QoS paths have been set up for h1-h3 and h2-h3 and the application is running. Figure \ref{Shorth4} shows the shortest default paths for h1-h4 and h2-h4.
+\begin{figure}[H]
+\begin{center}
+\includegraphics[scale=0.45]{shortesth4.png}   
+\end{center}
+ \caption{Shortest paths from h1,h2 to h4}
+ \label{Shorth4}
+\end{figure}
+Now, we run "iperf" from h1 to h4 and the next shortest and unused path with the better available bandwidth is added as a QoS flow for h1-h4 and also a reverse path for h4-h1 as shown in Figure \ref{Outh1h4}. Next, we run "iperf"  from h2 to h4. The application discovers the active flow, queries for link bandwidth and chooses the next shortest and unused path with the better bandwidth for h2-h4 as shown in Figure \ref{Outh2h4}.
+
+\begin{figure}[H]
+\begin{center}
+\includegraphics[scale=0.45]{h1-h4.png}   
+\end{center}
+ \caption{Application output for QoS Flow from h1-h4 and h4-h1}
+ \label{Outh1h4}
+\end{figure}
+
+\begin{figure}[H]
+\begin{center}
+\includegraphics[scale=0.45]{h2-h4.png}   
+\end{center}
+ \caption{Application output for QoS Flow from h2-h4 and h4-h2}
+ \label{Outh2h4}
+\end{figure}
+
+Figure \ref{Qosh4} shows the final set up for the paths for h1-h4 and h2-h4 with the application running.
+\begin{figure}[H]
+\begin{center}
+\includegraphics[scale=0.45]{qosh4.png}   
+\end{center}
+ \caption{New QoS paths from h1,h2 to h4}
+ \label{Qosh4}
+\end{figure}
+
+To test the throughput, we will "iperf" from h1-h4 and h2-h4 at the same time. The maximum link bandwidth that can be achieved is 50 Mbps. Figure \ref{h124WO} shows the results achieved without the QoS application running and Figure \ref{h124W} shows the results achieved with the QoS application running using the paths shows in \ref{Qosh4}. 
+\begin{figure}[H]
+\begin{center}
+\includegraphics[scale=0.45]{h124WO.png}   
+\end{center}
+ \caption{Iperf results from h1,h2 to h4 without application}
+ \label{h124WO}
+\end{figure}
+\begin{figure}[H]
+\begin{center}
+\includegraphics[scale=0.45]{h124W.png}   
+\end{center}
+ \caption{Iperf results from h1,h2 to h4 with application}
+ \label{h124W}
+\end{figure}
+It is clear that the QoS application paths achieve much better link bandwidth in case of competing traffic targeted at the same destination.
 \section{Challenges}
 There were a few challenges that were faced during the experiment setup.
-\paragraph{Floodlight default l2 learning switch:}
+\subsection{Default L2 learning switch:}
 The default modules of Floodlight controller do not have the capability to perform shortest path routing between hosts on different subnets. There is no ARP module that will take care of the ARP requests if we use a simple layer 2 learning switch module in the controller. Therefore, some advanced features of GENI Desktop were used to initialize all the OVS nodes with shortest path rules that modify the Ethernet header after sending all the ARP traffic to the controller. This also requires that the QoS Flow rule action field built by the application must contain clauses which modify the Ethernet header with source and destination MAC address at each hop for each source-destination host IP pair.
-\paragraph{Bandwidth design decision}
+\subsection{Bandwidth design decision}
 There is also a design decision involved which is the time interval at which the controller statistics module reassesses the bandwidth at the links. The default time used by the controller is 10 seconds and the application uses the default setting. According to Floodlight, the statistics provide a ballpark figure. OpenFlow does not provide any statistics which have the notion of time and the controller needs to calculate bandwidth using raw byte counters at two instances in time and return the value if requested using the statistics module. The 10 second time serves as a tradeoff between getting less error prone bandwidth calculation (to make control plane latency insignificant) and overburdening the switches with statistics requests by the controller to get real time bandwidth \cite{stats}.
-\paragraph{Dynamic path changing:}
+\subsection{Dynamic path changing:}
 The initial experiment setup changed the path for each flow dynamically based on link bandwidth every 10 seconds if a better path was available. This was not scalable since changing the path continuously does incur overhead at both the northbound and southbound interfaces. Also, it mirrored the same problem since the beginning of internet that all flows tend to choose the same better path with greater bandwidth at one instance in time which congests that path and leave the other alternate paths with more capacity but unused. Since the bandwidth stats are reassessed by the controller every 10 seconds, even if we query the stats every time when a flow is active does not guarantee that the seemingly best path in terms of bandwidth was not assigned to another flow in the same 10 second time period.
 
+\section{Learning Outcomes}
+The learning outcomes from this project were the following:
+\begin{itemize}
+\item Knowledge of different techniques and methods utilized for improving quality of service in software defined networks.
+\item Configuring an OpenFlow topology in GENI portal and initializing and configuring OpenvSwitch nodes to set up OVS bridges for networking.
+\item Connecting an SDN controller "Floodlight" with the configured OVS nodes and using the controller's REST API to interact with the OpenFlow switches.
+\item Developing a python application to parse information from GENI portal and the controller to construct the topology and change the default behavior of the network for improving performance.
+\item Discovering challenges with real time bandwidth information and decision making for dynamic routing.
+\end{itemize}
+
 \section{Conclusion}
-This project serves to be a proof of concept of how we can use intelligent controller applications to change the default behavior of the network. For dynamic routing based on bandwidth, more work needs to be done to tackle the challenges mentioned in Section 6. Maybe if OpenFlow protocols introduces some standards for adding byte counters with time notion, the overhead and latency incurred at the controller for calculating bandwidth by keeping track of byte counters at two time instances can be avoided and more real time statistics can be sent through the REST API to applications.
+This project serves to be a proof of concept of how we can use intelligent controller applications to change the default behavior of a GENI network. For dynamic routing based on bandwidth, more work needs to be done to tackle the challenges mentioned in Section 6. Maybe if OpenFlow protocols introduces some standards for adding byte counters with time notion, the overhead and latency incurred at the controller for calculating bandwidth by keeping track of byte counters at two time instances can be avoided and more real time statistics can be sent through the REST API to applications.
 \\
 \\
 This experiment fixes a path for different flows as they arrive if a guaranteed better bandwidth path can be provided to them. This concept can be used to target better service for a higher class of flows either coming from a priority server distinguished by the server IP address, Multiprotocol Label Switching (MPLS) traffic or multimedia traffic from a known server while other flows can remain on the shortest best effort paths. It is shown in the results that the throughput achieved by using the application was almost at the link capacity when competing traffic was targeted to the same destination as compared to ~50\% of link capacity achieved by just shortest path.
+
 \bibliographystyle{ieeetr}% Select the citation style e.g. ieeetr
 \bibliography{Smartgrid}% write the directory to the .bib file
 %%% End document
