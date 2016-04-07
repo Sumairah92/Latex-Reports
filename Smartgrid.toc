@@ -3,12 +3,12 @@
 \contentsline {section}{\numberline {2}Related work for implementing QoS in sdn}{3}
 \contentsline {subsection}{\numberline {2.1}Rate limiting and traffic shaping}{3}
 \contentsline {subsection}{\numberline {2.2}Differentiated Services Code Point (DSCP)}{3}
-\contentsline {subsection}{\numberline {2.3}Multipath routing}{3}
+\contentsline {subsection}{\numberline {2.3}Multipath routing}{4}
 \contentsline {subsection}{\numberline {2.4}Dynamic routing of specific flows}{4}
 \contentsline {section}{\numberline {3}Project Design}{4}
 \contentsline {subsection}{\numberline {3.1}Experiment Setup}{4}
 \contentsline {subsection}{\numberline {3.2}The network topology}{5}
-\contentsline {subsection}{\numberline {3.3}Control Flow}{6}
+\contentsline {subsection}{\numberline {3.3}Control Flow}{7}
 \contentsline {subsection}{\numberline {3.4}Design Decisions}{7}
 \contentsline {section}{\numberline {4}Project Implementation}{9}
 \contentsline {subsection}{\numberline {4.1}Constructing the topology}{9}
@@ -19,12 +19,17 @@
 \contentsline {subsection}{\numberline {4.6}Calculate available bandwidth for alternate paths}{11}
 \contentsline {paragraph}{\nonumberline Global QoS rules structure}{11}
 \contentsline {subsection}{\numberline {4.7}Generate rule for path}{12}
-\contentsline {section}{\numberline {5}Results}{13}
-\contentsline {subsection}{\numberline {5.1}Traffic from host 1 and host 2 to host 3}{13}
-\contentsline {subsection}{\numberline {5.2}Traffic from host 1 and host 2 to host 4}{16}
-\contentsline {section}{\numberline {6}Challenges}{19}
-\contentsline {subsection}{\numberline {6.1}Default L2 learning switch:}{19}
-\contentsline {subsection}{\numberline {6.2}Bandwidth design decision}{20}
-\contentsline {subsection}{\numberline {6.3}Dynamic path changing:}{20}
-\contentsline {section}{\numberline {7}Learning Outcomes}{20}
-\contentsline {section}{\numberline {8}Conclusion}{21}
+\contentsline {subsection}{\numberline {4.8}Deletion of QoS Flows}{13}
+\contentsline {subsection}{\numberline {4.9}Application Testing}{13}
+\contentsline {subsubsection}{\numberline {4.9.1}File parsing for topology construction}{14}
+\contentsline {subsubsection}{\numberline {4.9.2}Calculate bandwidth for paths function}{14}
+\contentsline {subsubsection}{\numberline {4.9.3}Rule generation function}{14}
+\contentsline {section}{\numberline {5}Results}{14}
+\contentsline {subsection}{\numberline {5.1}Traffic from host 1 and host 2 to host 3}{14}
+\contentsline {subsection}{\numberline {5.2}Traffic from host 1 and host 2 to host 4}{17}
+\contentsline {section}{\numberline {6}Challenges}{20}
+\contentsline {subsection}{\numberline {6.1}Default L2 learning switch}{20}
+\contentsline {subsection}{\numberline {6.2}Bandwidth design decision}{21}
+\contentsline {subsection}{\numberline {6.3}Dynamic path changing}{21}
+\contentsline {section}{\numberline {7}Learning Outcomes}{21}
+\contentsline {section}{\numberline {8}Conclusion}{22}

@@ -87,7 +87,7 @@ The main goal of Software defined networks is to help create a smarter network t
 The decoupling of the control plane and data plane allows a high degree of control over flows that pass through the switches via intelligent controller applications using the northbound APIs for the controller. These applications can be leveraged for providing dynamic QoS guarantees for different classes of flows with different service requirements by making dynamic routing decisions or efficient priority queuing which is not possible in the traditional networks. For example flows belonging to an application with high QoS requirements can be diverted to a path with better bandwidth and less latency. Similarly, a flow belonging to a time-sensitive application can be placed in a priority queue of the OpenFlow switch.
 \\
 \\
-This project focuses on research about how OpenFlow and Software Defined Networks can be used to provide Quality of Service. The project aims for setting up a GENI portal experiment for implementing dynamic Quality of Service thereby improving the network performance. The project serves to be a proof of concept on how the behavior of individual network flows can be changed from the default shortest forwarding path in a GENI SDN experiment through Northbound API applications running on top of the SDN controller.
+This project focuses on research about how OpenFlow and Software Defined Networks can be used to provide Quality of Service. The project aims for setting up a GENI portal experiment for making routing path decisions based on available link bandwidth thereby improving the network performance. The project serves to be a proof of concept on how the behavior of individual network flows can be changed from the default shortest forwarding path in a GENI SDN experiment through Northbound API applications running on top of the SDN controller.
 \\
 \\
 This report is organized as follows. Section 2 presents the literature review on related work for implementing QoS in software defined networks and summarizes the various techniques that are used. Section 3 presents a high level view of the experiment design and setup while Section 4 investigates in detail the implementation of the developed application. Section 5 demonstrates the experiment results and Section 6 discusses some of the challenges of the experiment. Section 7 and 8 describe the learning outcomes for this Master's project and conclude this report.
@@ -118,7 +118,7 @@ Another technique in \cite{thesis} tries to find an optimal path between two end
 
 \section{Project Design}
 \subsection{Experiment Setup}
-The experiment is set up in GENI portal using Xen virtual machines as hosts and Open vSwitch nodes as virtual switches between them. The switches are configured with default shortest path routing rules for each of the hosts using an SDN controller. The SDN controller used is Floodlight open source controller which exposes a REST API for the northbound applications to use. The northbound QoS application for the experiment is developed in Python. It uses python packages like Networkx and untangle in order to construct the topology using the information provided by the controller REST API and RSpec document provided by the GENI portal. 
+The experiment is set up in GENI portal using Xen virtual machines as hosts and Open vSwitch nodes as virtual switches between them. The switches are configured with default shortest path routing rules for each of the hosts using an SDN controller. The SDN controller used is Floodlight open source controller which exposes a REST API for the northbound applications to use. The northbound QoS application for the experiment is developed in Python. It uses python packages like Networkx\footnote{https://networkx.github.io\label{networkx}} and untangle\footnote{https://untangle.readthedocs.org\label{untangle}} in order to construct the topology using the information provided by the controller REST API and RSpec document provided by the GENI portal. 
 \subsection{The network topology}
 The topology constructed in GENI portal is shown in Figure \ref{Fig 3.1}. The topology is not linear and has multiple paths between a pair of hosts in order to have alternate paths for routing flows based on bandwidth. The nodes labeled as switches run Openvswitch on them configured to use an OVS bridge to connect to the hosts and other OVS nodes.
 \\
@@ -126,14 +126,14 @@ The topology constructed in GENI portal is shown in Figure \ref{Fig 3.1}. The to
 Each of the OpenFlow switches (OVS) have a Datapath id (DPID) associated with them which is used by the SDN controller to identify and control the switches. Using the web interface of the Floodlight controller, we can see the switches connected to the controller and the various information statistics related to them in Figure \ref{Fig 3.2}.
 \begin{figure}[H]
 \begin{center}
-\includegraphics[scale=0.4]{topology.png}   
+\includegraphics[scale=0.55]{topology.png}   
 \end{center}
  \caption{GENI topology}
  \label{Fig 3.1}
 \end{figure}
 \begin{figure}[H]
 \begin{center}
-\includegraphics[scale=0.45]{floodlight.png}   
+\includegraphics[scale=0.55]{floodlight.png}   
 \end{center}
  \caption{Floodlight dashboard}
  \label{Fig 3.2}
@@ -159,7 +159,7 @@ The control flow of the application starts from constructing the network graph, 
 \subsection{Design Decisions}
 The design decisions taken are the following:
 \begin{itemize}
-\item The topology is constructed using Python Networkx library undirected graph. The information for the nodes and the edges is received from the GENI RSpec document as well as the Floodlight controller REST API calls.
+\item The topology is constructed using Python Networkx\footref{networkx} library undirected graph. The information for the nodes and the edges is received from the GENI RSpec document as well as the Floodlight controller REST API calls.
 \item The inter-switch links have been assigned a total bandwidth of 50 Mbps each and the switch-hosts links have the default bandwidth of 100 Mbps as configured by GENI portal.
 \item As a default setting of the statistics collector module of Floodlight controller, the links are polled every 10 seconds for updated information. No settings of the module have been changed in this experiment.
 \item The different simple paths are only on an end-to-end basis for a pair of hosts. A simple path means that no node is repeated in a path between two hosts.
@@ -175,7 +175,7 @@ The design decisions taken are the following:
 \section{Project Implementation}
 This section goes over the steps of the developed application summarized in Figure \ref{Flow} in detail.
 \subsection{Constructing the topology}
-The application reads in the RSpec XML document from GENI portal and parses information about the names and interfaces of the nodes. The Python library used for parsing is "untangle" which converts XML to python objects. The node data items consist of the IP address, MAC address and port number for each of the interfaces connected to that node. The application then queries the controller using REST API commands to get respective OpenFlow Datapath ids (DPIDs) for the switches in the topology. Following command is used to get the DPID list from the controller:
+The application reads in the RSpec XML document from GENI portal and parses information about the names and interfaces of the nodes. The Python library used for parsing is "untangle\footref{untangle}" which converts XML to python objects. The node data items consist of the IP address, MAC address and port number for each of the interfaces connected to that node. The application then queries the controller using REST API commands to get respective OpenFlow Datapath ids (DPIDs) for the switches in the topology. Following command is used to get the DPID list from the controller:
 \textit{
 \begin{center}
 "curl -s http://<controllerIp>/wm/core/controller/switches/json" 
@@ -193,7 +193,7 @@ This command returns features of all the switches and the field 'datapathDescrip
 "curl -s http://<controllerIp>/wm/core/switch/all/features/json"
 \end{center}
 }
-For constructing the network graph after parsing the RSpec and querying the controller for the desired information, Python library "Networkx" is used which provides data structures for constructing network graphs. The library creates a Network object to which nodes and edges can be added. The nodes have the data items for interfaces as described above as well as the DPID and port numbers matched to the nodes using the controller information. 
+For constructing the network graph after parsing the RSpec and querying the controller for the desired information, Python library "Networkx\footref{networkx}" is used which provides data structures for constructing network graphs. The library creates a Network object to which nodes and edges can be added. The nodes have the data items for interfaces as described above as well as the DPID and port numbers matched to the nodes using the controller information. 
 \\
 \\
 Since the RSpec document or the controller do not provide information about the neighbors of the nodes or which interface is connected to which neighbor, the inter-host links are identified by matching the respective IP addresses in order to construct the edges between the nodes for the graph.
@@ -230,10 +230,11 @@ As described in section 4.3.2, the structure "switchHostsFlows" keeps track of t
 For each shortest default path flow rule returned, the application checks if the source IP is from the same subnet as an interface from the switch DPID being polled by comparing to the list of switch hosts in 'switchHostsFlows'. If determined to be the gateway switch for that flow, the new packet count is compared to the stored last known packet count to determine if the flow is active. If a shortest default path flow rule is found active, the function to calculate bandwidth for all alternate paths is called.
 
 \subsection{Calculate available bandwidth for alternate paths}
-The "calculate bandwidth for paths function" receives two arguments; a source and a target for an active flow on its default shortest path. The function calculates all simple paths between the source and the target using "all\_simple\_paths" method of the Python Networkx library. A simple path means that no node is repeated in a path between two hosts. If there is only one simple path returned, no alternate path is present between the two hosts i.e. only the shortest default path is available and the program returns to polling other active shortest default path flows.
+The "calculate bandwidth for paths function" receives two arguments; a source and a target for an active flow on its default shortest path. The function calculates all simple paths between the source and the target using "all\_simple\_paths" method of the Python Networkx\footref{networkx} library. A simple path means that no node is repeated in a path between two hosts. If there is only one simple path returned, no alternate path is present between the two hosts i.e. only the shortest default path is available and the program returns to polling other active shortest default path flows. Figure \ref{pseudo} shows the pseudocode for this function.
 \\
 \\
 Using the information from the "interswitchLinks", the function uses the curl command from section 4.3.3 to get the transmission (TX) and reception bandwidth (RX) per switch per inter-switch port in bits per second. The TX and RX values are added to find the bandwidth usage in bits per second and then subtracted from the actual known link bandwidth to get available link bandwidth for each switch port and stored in a structure for using in path selection.
+
 \paragraph{Global QoS rules structure}
 In order to keep track of all the QoS flows of priority `3' added in the topology, a global list "QoSFlowsList" is maintained. This structure has 4 fields per rule entry; a source, a target, the complete path and the inter-switch links involved. This structure aids in the decision of selecting an unused / unshared path between different nodes in order to achieve maximum throughput when competing traffic is targeted from different sources to the same destination. The function also checks this list to ensure that a QoS flow for a source and destination pair does not already exist. The major functions of this list are:
 \begin{itemize}
@@ -242,6 +243,13 @@ In order to keep track of all the QoS flows of priority `3' added in the topolog
 \item The third role of the list is to check if for a given source-target, a reverse path "target-source" exists in the list. If yes, then the reverse path is added to the list and also sent to the rule generation function.
 \item The final purpose of this list is to find best possible unused or unshared inter-switch link paths for each incoming active flow based on length of path and aggregate available bandwidth.
 \end{itemize}
+\begin{figure}[H]
+\begin{center}
+\includegraphics[scale=0.55]{pseudo.png}   
+\end{center}
+ \caption{Pseudocode for calculate\_bandwidth\_for\_paths}
+ \label{pseudo}
+\end{figure}
 For each simple path calculated for a source-target pair, the function decides which switches and inter-switch ports are involved on that path. Using the stored bandwidth statistics, it calculates the available bandwidth for each path by finding the minimum available bandwidth for a link involved in that path.
 \\
 \\
@@ -254,7 +262,7 @@ The "generate rule for path" function is called if the "calculate bandwidth for 
 "curl -s http://<controllerIp>/wm/staticflowpusher/list/<switchDPID>/json" 
 \end{center}
 }
-If a rule already exists, the function returns and does not generate a new priority `3' rule. If no rule exists, the function determines the node and the next hop interface for each node in the path, finds the MAC address and switch port for forwarding and constructs a flow rule in JSON format to send via the static flow pusher REST API of Floodlight controller. A sample flow rule is shown in Figure \ref{Fig 4.1}. The command used by the application to push a generated flow through the controller to the switch is:
+If a rule already exists, the function returns and does not generate a new priority `3' rule. If no rule exists, the function determines the node and the next hop interface for each node in the path, finds the MAC address and switch port for forwarding and constructs a flow rule in JSON format to send via the static flow pusher REST API of Floodlight controller. A sample flow rule is shown in Figure \ref{sample}. The command used by the application to push a generated flow through the controller to the switch is:
 \textit{
 \begin{center}
 "curl -X POST -d `"+<JSON\_rule>+"' http://<controllerIp>/wm/staticflowpusher/json" 
@@ -262,11 +270,37 @@ If a rule already exists, the function returns and does not generate a new prior
 }
 \begin{figure}[H]
 \begin{center}
-\includegraphics[scale=0.45]{flow.png}   
+\includegraphics[scale=0.4]{flow.png}   
 \end{center}
  \caption{A sample flow}
- \label{Fig 4.1}
+ \label{sample}
 \end{figure}
+\subsection{Deletion of QoS Flows}
+If the application is aborted throught the command prompt, we need to delete all the QoS flows so that new QoS rules can be set up the next time application is started. In order to delete any rule inserted using the static flow pusher API of Floodlight, the globally unique flow rule name needs to be tracked. In Section 4.7, if any rule is pushed using the static flow pusher, the globally unique flow name is stored in a list "toDelete". When the signal to quit application is sent through the keyboard, the function delete\_rules is called which deletes all the static rules in the switches using the following REST API command and exits the application.
+\textit{
+\begin{center}
+"curl -X DELETE -d '{name:<flow name>}' http:// controllerIp/wm/staticflowpusher/json"
+\end{center}
+}
+
+\subsection{Application Testing}
+The scenarios for testing the performance of the application are listed below:
+\subsubsection{File parsing for topology construction}
+In case of an absent or corrupted GENI RSpec file for topology construction, the application catches the error and exits with a "File error" message. The XML file parsing implementing using Python untangle\footref{untangle} library logic and function calls for constructing the network graph nodes are placed in a "try" block. Any exception is caught and application is properly exited. This prevents the errors in topology construction to be carried forward into the link identification and creation of other structures.
+\subsubsection{Calculate bandwidth for paths function}
+There are multiple checks to ensure the calculate bandwidth for paths function does not cause errors in the application which are described below:
+\begin{itemize}
+\item The function is passed no user input and only the source and target of an active flow polled from the controller are passed as arguments .
+\item If the source and target passed as arguments have no alternate paths, the function returns "None" and the control passes to polling active flows without errors.
+\item Since each QoS Flow is added to the global QoS list before pushed into the switches by the controller, the function always checks if a QoS flow for the passed arguments already exists. If yes, then a "None" is returned.
+\item The function also checks if a reverse path for the source and target arguments exists in the QoS list. This prevents generation of an entirely different reverse path for a source and target. 
+\item Before choosing an alternate path, the function always checks if that path is a valid and unused one by checking the QoS list to prevent using a path already assigned.
+\item If no better path was found, the function will return "None" and the control will pass to polling active flows again.
+\end{itemize}
+
+\subsubsection{Rule generation function}
+The rule generation function is only called when the calculate bandwidth function returns a valid path. Since no other input is received by the rule generation function, in case of a valid path argument the function generates and passes the rules to the controller with no errors.
+
 \section{Results}
 \subsection{Traffic from host 1 and host 2 to host 3}
 To test the effectiveness of the applicaton, we need to test throughput achieved with competing traffic with and without the application running. We will test this by sending traffic from host 1 (h1) to host 3 (h3) and host 2 (h2) to host 3 (h3) at the same time. Figure \ref{Shorth3} shows the shortest path setup from h1-h3 and h2-h3 without the application running.
@@ -372,11 +406,11 @@ To test the throughput, we will "iperf" from h1-h4 and h2-h4 at the same time. T
 It is clear that the QoS application paths achieve much better link bandwidth in case of competing traffic targeted at the same destination.
 \section{Challenges}
 There were a few challenges that were faced during the experiment setup.
-\subsection{Default L2 learning switch:}
+\subsection{Default L2 learning switch}
 The default modules of Floodlight controller do not have the capability to perform shortest path routing between hosts on different subnets. There is no ARP module that will take care of the ARP requests if we use a simple layer 2 learning switch module in the controller. Therefore, some advanced features of GENI Desktop were used to initialize all the OVS nodes with shortest path rules that modify the Ethernet header after sending all the ARP traffic to the controller. This also requires that the QoS Flow rule action field built by the application must contain clauses which modify the Ethernet header with source and destination MAC address at each hop for each source-destination host IP pair.
 \subsection{Bandwidth design decision}
 There is also a design decision involved which is the time interval at which the controller statistics module reassesses the bandwidth at the links. The default time used by the controller is 10 seconds and the application uses the default setting. According to Floodlight, the statistics provide a ballpark figure. OpenFlow does not provide any statistics which have the notion of time and the controller needs to calculate bandwidth using raw byte counters at two instances in time and return the value if requested using the statistics module. The 10 second time serves as a tradeoff between getting less error prone bandwidth calculation (to make control plane latency insignificant) and overburdening the switches with statistics requests by the controller to get real time bandwidth \cite{stats}.
-\subsection{Dynamic path changing:}
+\subsection{Dynamic path changing}
 The initial experiment setup changed the path for each flow dynamically based on link bandwidth every 10 seconds if a better path was available. This was not scalable since changing the path continuously does incur overhead at both the northbound and southbound interfaces. Also, it mirrored the same problem since the beginning of internet that all flows tend to choose the same better path with greater bandwidth at one instance in time which congests that path and leave the other alternate paths with more capacity but unused. Since the bandwidth stats are reassessed by the controller every 10 seconds, even if we query the stats every time when a flow is active does not guarantee that the seemingly best path in terms of bandwidth was not assigned to another flow in the same 10 second time period.
 
 \section{Learning Outcomes}
@@ -393,7 +427,7 @@ The learning outcomes from this project were the following:
 This project serves to be a proof of concept of how we can use intelligent controller applications to change the default behavior of a GENI network. For dynamic routing based on bandwidth, more work needs to be done to tackle the challenges mentioned in Section 6. Maybe if OpenFlow protocols introduces some standards for adding byte counters with time notion, the overhead and latency incurred at the controller for calculating bandwidth by keeping track of byte counters at two time instances can be avoided and more real time statistics can be sent through the REST API to applications.
 \\
 \\
-This experiment fixes a path for different flows as they arrive if a guaranteed better bandwidth path can be provided to them. This concept can be used to target better service for a higher class of flows either coming from a priority server distinguished by the server IP address, Multiprotocol Label Switching (MPLS) traffic or multimedia traffic from a known server while other flows can remain on the shortest best effort paths. It is shown in the results that the throughput achieved by using the application was almost at the link capacity when competing traffic was targeted to the same destination as compared to ~50\% of link capacity achieved by just shortest path.
+This experiment fixes a path for different flows as they arrive if a better bandwidth path can be provided to them. This concept can be used to target better service for a higher class of flows either coming from a priority server distinguished by the server IP address, Multiprotocol Label Switching (MPLS) traffic or multimedia traffic from a known server while other flows can remain on the shortest best effort paths. It is shown in the results that the throughput achieved by using the application was almost at the link capacity when competing traffic was targeted to the same destination as compared to ~50\% of link capacity achieved by just shortest path.
 
 \bibliographystyle{ieeetr}% Select the citation style e.g. ieeetr
 \bibliography{Smartgrid}% write the directory to the .bib file
