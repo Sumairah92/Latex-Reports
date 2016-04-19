@@ -96,7 +96,7 @@ This report is organized as follows. Section 2 presents the literature review on
 This report summarizes the techniques that were researched for literature review on the project.
 
 \subsection{Rate limiting and traffic shaping}
-The rate limiting or traffic shaping technique is achieved by bandwidth control among the OVS ports for rate limiting. Standard OpenFlow protocol specifications like "enqueue" can be used for queuing traffic based on inspection of flows by the SDN controller in order to assign different queuing QoS policies for different flows. The queues inside OVS itself are configured by an administrator of OpenFlow versions less than 3.0 while versions 3.0 and above introduce "OF-Config" that will make this process much easier \cite{bigswitch}. 
+The rate limiting or traffic shaping technique is achieved by bandwidth control among the OpenvSwitch (OVS) ports for rate limiting. Standard OpenFlow protocol specifications like "enqueue" can be used for queuing traffic based on inspection of flows by the SDN controller in order to assign different queuing QoS policies for different flows. The queues inside OVS itself are configured by an administrator of OpenFlow versions less than 3.0 while versions 3.0 and above introduce "OF-Config" that will make this process much easier \cite{bigswitch}. 
 \\
 \\
 Since only bandwidth guaratees and FIFO scheduling is not enough to provide QoS guarantees in SDN, using multiple packet schedulers of Linux kernel e.g., Hierarchical Token Bucket, Randonly Early detection and Stochastic Fairness queuing can be utilized to overcome packet scheduling issues. The strong traffic control system of Linux can be used to provide traffic shaping, queuing and congestion avoidance. This approach would require data path extensions for OpenFlow for kernel space queues \cite{scheduler}.
@@ -224,7 +224,7 @@ The application also creates a list of links between the switches and the respec
 As described in section 4.3.2, the structure "switchHostsFlows" keeps track of the last known packet count for a particular flow from a host to a destination. The application queries the controller to poll the switches for a list of flow statistics every 10 seconds using the command:
 \textit{
 \begin{center}
-"curl -s http://<controllerIp>/wm/core/switch/<switchDPID>'/flow/json" 
+"curl -s http://<controllerIp>/wm/core/switch/<switchDPID>/flow/json" 
 \end{center}
 }
 For each shortest default path flow rule returned, the application checks if the source IP is from the same subnet as an interface from the switch DPID being polled by comparing to the list of switch hosts in 'switchHostsFlows'. If determined to be the gateway switch for that flow, the new packet count is compared to the stored last known packet count to determine if the flow is active. If a shortest default path flow rule is found active, the function to calculate bandwidth for all alternate paths is called.
@@ -290,7 +290,7 @@ In case of an absent or corrupted GENI RSpec file for topology construction, the
 \subsubsection{Calculate bandwidth for paths function}
 There are multiple checks to ensure the calculate bandwidth for paths function does not cause errors in the application which are described below:
 \begin{itemize}
-\item The function is passed no user input and only the source and target of an active flow polled from the controller are passed as arguments .
+\item The function is passed no user input and only the source and target of an active flow polled from the controller are passed as arguments.
 \item If the source and target passed as arguments have no alternate paths, the function returns "None" and the control passes to polling active flows without errors.
 \item Since each QoS Flow is added to the global QoS list before pushed into the switches by the controller, the function always checks if a QoS flow for the passed arguments already exists. If yes, then a "None" is returned.
 \item The function also checks if a reverse path for the source and target arguments exists in the QoS list. This prevents generation of an entirely different reverse path for a source and target. 
@@ -411,7 +411,7 @@ The default modules of Floodlight controller do not have the capability to perfo
 \subsection{Bandwidth design decision}
 There is also a design decision involved which is the time interval at which the controller statistics module reassesses the bandwidth at the links. The default time used by the controller is 10 seconds and the application uses the default setting. According to Floodlight, the statistics provide a ballpark figure. OpenFlow does not provide any statistics which have the notion of time and the controller needs to calculate bandwidth using raw byte counters at two instances in time and return the value if requested using the statistics module. The 10 second time serves as a tradeoff between getting less error prone bandwidth calculation (to make control plane latency insignificant) and overburdening the switches with statistics requests by the controller to get real time bandwidth \cite{stats}.
 \subsection{Dynamic path changing}
-The initial experiment setup changed the path for each flow dynamically based on link bandwidth every 10 seconds if a better path was available. This was not scalable since changing the path continuously does incur overhead at both the northbound and southbound interfaces. Also, it mirrored the same problem since the beginning of internet that all flows tend to choose the same better path with greater bandwidth at one instance in time which congests that path and leave the other alternate paths with more capacity but unused. Since the bandwidth stats are reassessed by the controller every 10 seconds, even if we query the stats every time when a flow is active does not guarantee that the seemingly best path in terms of bandwidth was not assigned to another flow in the same 10 second time period.
+The initial experiment setup changed the path for each flow dynamically based on link bandwidth every 10 seconds if a better path was available. This was not scalable since changing the path continuously does incur overhead at both the northbound and southbound interfaces. Also, it mirrored the same problem since the beginning of internet that all flows tend to choose the same better path with greater bandwidth at one instance in time which congests that path and leaves the other alternate paths with more capacity but unused. Since the bandwidth stats are reassessed by the controller every 10 seconds, even if we query the stats every time when a flow is active does not guarantee that the seemingly best path in terms of bandwidth was not assigned to another flow in the same 10 second time period.
 
 \section{Learning Outcomes}
 The learning outcomes from this project were the following:
